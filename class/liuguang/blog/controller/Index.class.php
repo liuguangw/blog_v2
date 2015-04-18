@@ -19,7 +19,7 @@ class Index extends BaseController {
 		$result = array ();
 		$db = $this->getDb ();
 		$tablePre = $this->getTablePre ();
-		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key IN(\'blogname\',\'pass\',\'nickname\',\'touxiang_img\',\'description\',\'open_compress\')' );
+		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key IN(\'blogname\',\'pass\',\'nickname\',\'touxiang_img\',\'description\',\'blog_keywords\',\'blog_bottom\',\'open_compress\')' );
 		while ( $tmp = $stm->fetch () ) {
 			$result [$tmp ['t_key']] = $tmp ['t_value'];
 		}
@@ -32,7 +32,8 @@ class Index extends BaseController {
 				'description' => $result ['description'],
 				'load_js' => array (
 						'ueditor' => false,
-						'uploadify' => false 
+						'uploadify' => false,
+						'shCore'=>false,
 				) 
 		);
 		if (! isset ( $_COOKIE ['osid'] ))
@@ -49,9 +50,13 @@ class Index extends BaseController {
 		$blogInfo ['rcodeUrlTpl'] = $urlHandler->createUrl ( 'ajax/BlogUtil', 'rcode', array ('rand'=>'[rand]'), false );
 		$blogInfo ['doLoginUrl'] = $urlHandler->createUrl ( 'ajax/BlogUtil', 'dologin', array (), false );
 		$blogInfo['logoutUrl']=$urlHandler->createUrl ( 'Index', 'index', array (),false );
+		$blogInfo['adminUrlTpl']=$urlHandler->createUrl ( 'web/BlogAdmin', '[action]', array () );
+		$blogInfo['refreshRUrl']=$urlHandler->createUrl ( 'ajax/BlogUtil', 'blogRight', array (),false );
 		$tplData->set ( 'blogInfo', json_encode ( $blogInfo ) );
 		$tplData->set ( 'nIndex', 0 );
+		$tplData->set ( 'blog_keywords', $result ['blog_keywords'] );
 		$tplData->set ( 'title', $result ['blogname'] );
+		$tplData->set ( 'blog_bottom', $result ['blog_bottom'] );
 		$tplData->set ( 'blogCsspath', $urlHandler->createUrl ( 'ajax/BlogUtil', 'css', array () ) );
 		$tplData->set ( 'blogIndexUrl', $urlHandler->createUrl ( 'Index', 'index', array () ) );
 		$tplData->set ( 'blogListUrl', $urlHandler->createUrl ( 'web/BlogList', 'index', array (
@@ -67,12 +72,6 @@ class Index extends BaseController {
 				'page' => 1 
 		) ) );
 		$tplData->set ( 'blogAboutUrl', $urlHandler->createUrl ( 'web/BlogAbout', 'index', array () ) );
-		$tplData->set ( 'adminSetsUrl', $urlHandler->createUrl ( 'web/BlogAdmin', 'sets', array () ) );
-		$tplData->set ( 'adminTypesUrl', $urlHandler->createUrl ( 'web/BlogAdmin', 'types', array () ) );
-		$tplData->set ( 'adminTagsUrl', $urlHandler->createUrl ( 'web/BlogAdmin', 'tags', array () ) );
-		$tplData->set ( 'adminFilesUrl', $urlHandler->createUrl ( 'web/BlogAdmin', 'files', array () ) );
-		$tplData->set ( 'postTopicUrl', $urlHandler->createUrl ( 'web/BlogAdmin', 'postTopic', array () ) );
-		$tplData->set ( 'adminEnvUrl', $urlHandler->createUrl ( 'web/BlogAdmin', 'env', array () ) );
 		$tpl->setCompress ( ($result ['open_compress'] == 1) );
 		return $tpl;
 	}

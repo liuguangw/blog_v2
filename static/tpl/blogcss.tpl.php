@@ -22,6 +22,10 @@ body{
 #blog_center a {
 	text-decoration:none;
 }
+#blog_bottom{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
 .touming {
 	opacity: .8;
 	filter: alpha(opacity = 80);
@@ -69,3 +73,17 @@ body{
 #admin_list{
 	margin-top: 0;
 }
+.topic-node .panel-heading a{
+ 	color:#333;
+ 	font-weight:bold;
+}
+.topic-node .panel-heading a:hover{
+  color:#E63;
+ }
+.topic-node .panel-footer a{
+ 	color:#2849CA;
+ 	font-weight:bold;
+}
+.topic-node .panel-footer a:hover{
+  color:#E63;
+ }

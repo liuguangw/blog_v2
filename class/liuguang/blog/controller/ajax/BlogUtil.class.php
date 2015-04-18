@@ -7,6 +7,7 @@ use liuguang\blog\controller\BaseController;
 use think\Verify;
 use liuguang\mvc\DataMap;
 use liuguang\blog\model\User;
+use liuguang\blog\view\BlogRight;
 
 /**
  * 博客的工具类控制器
@@ -96,6 +97,12 @@ class BlogUtil extends BaseController {
 				'success' => false,
 				'msg' => $msg 
 		);
+		echo json_encode ( $result );
+	}
+	public function blogRightAction(){
+		header ( 'Content-Type: application/json' );
+		$rightM=new BlogRight($this->getDb(),$this->getTablePre());
+		$result=array("success"=>true,"html"=>$rightM->getHtml());
 		echo json_encode ( $result );
 	}
 }

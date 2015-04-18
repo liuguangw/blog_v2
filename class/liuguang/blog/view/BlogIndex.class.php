@@ -31,20 +31,21 @@ class BlogIndex {
 		$appConfig = $app->getAppConfig ();
 		$urlHandler = $app->getUrlHandler ();
 		date_default_timezone_set ( $appConfig->get ( 'timeZone' ) );
-		$nodeTpl = '<div class="panel panel-default">
-  <div class="panel-heading">%s</div>
+		$nodeTpl = '<div class="panel panel-default topic-node">
+  <div class="panel-heading"><a href="%s">%s</a></div>
   <div class="panel-body">%s...</div>
   <div class="panel-footer" style="text-align:right">发表于%s,<a href="%s">[阅读全文]</a></div>
 </div>';
 		$html = '';
 		$stm = $this->db->query ( 'SELECT t_id,t_title,t_prev_text,post_time FROM ' . $this->tablePre . 'topic ORDER BY t_id DESC Limit 0,' . $limit );
 		while ( $tmp = $stm->fetch () ) {
-			$html .= sprintf ( $nodeTpl, $tmp ['t_title'], $tmp ['t_prev_text'], date ( 'Y-m-d H:i:s', $tmp ['post_time'] ), $urlHandler->createUrl ( 'web/Topic', 'index', array (
+			$topicHref=$urlHandler->createUrl ( 'web/Topic', 'index', array (
 					't_id' => $tmp ['t_id'] 
-			) ) );
+			) );
+			$html .= sprintf ( $nodeTpl,$topicHref, $tmp ['t_title'], $tmp ['t_prev_text'], date ( 'Y-m-d H:i:s', $tmp ['post_time'] ), $topicHref);
 		}
 		$html .= '<script type="text/javascript">
-            $("#blog_center .panel-footer").find("a").bindPushState();
+            $(".topic-node a").bindPushState();
         </script>';
 		return $html;
 	}

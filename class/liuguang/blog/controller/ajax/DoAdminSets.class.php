@@ -37,7 +37,9 @@ class DoAdminSets extends BaseAdmin {
 				'descr_color',
 				'nav_color',
 				'nav_active_color',
-				'abouts' 
+				'blog_keywords',
+				'abouts',
+				'blog_bottom'
 		);
 		$userM = new User ();
 		if (! $userM->checkNickname ( $postData->get ( 'nickname', '' ) )) {

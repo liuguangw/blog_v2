@@ -250,7 +250,7 @@
         //,elementPathEnabled : true
 
         //wordCount
-        //,wordCount:true          //是否开启字数统计
+        ,wordCount:false          //是否开启字数统计
         //,maximumWords:10000       //允许的最大字符数
         //字数统计提示，{#count}代表当前字数，{#leave}代表还可以输入多少字符数,留空支持多语言自动切换，否则按此配置显示
         //,wordCountMsg:''   //当前已输入 {#count} 个字符，您还可以输入{#leave} 个字符
@@ -343,6 +343,9 @@
 
         //webAppKey 百度应用的APIkey，每个站长必须首先去百度官网注册一个key后方能正常使用app功能，注册介绍，http://app.baidu.com/static/cms/getapikey.html
         //, webAppKey: ""
+        //代码高亮
+        ,highlightJsUrl:URL+"third-party/SyntaxHighlighter/shCore.js"
+        ,highlightCssUrl:URL+"third-party/SyntaxHighlighter/shCoreDefault.css"
     };
 
     function getUEBasePath(docUrl, confUrl) {

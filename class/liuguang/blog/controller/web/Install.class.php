@@ -21,7 +21,7 @@ class Install extends BaseController{
 		$doInstallUrl=$app->getUrlHandler()->createUrl('ajax/Install', 'do',array(),false);
 		$tpl->getTplData()->set('checkInputUrl',$checkInputUrl);
 		$tpl->getTplData()->set('doInstallUrl', $doInstallUrl);
-		$tpl->getTplData()->set('blogInit', $appConfig->get('blogInit'));
+		$tpl->getTplData()->set('blogInit', $appConfig->get('blogInit',false)?'true':'false');
 		$tpl->setCompress(true);
 		$tpl->display();
 	}

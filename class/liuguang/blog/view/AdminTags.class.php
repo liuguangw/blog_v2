@@ -81,7 +81,7 @@ class AdminTags {
                             "dataType" : "json",
                             "data" : postData,
                             "success" : function(data) {
-                                if(data.success==1){
+                                if(data.success){
                                     /*操作成功*/
                                     if(index==0)
                                         alertModal("success","修改成功","修改' . $this->tName . '成功");
@@ -89,6 +89,7 @@ class AdminTags {
                                         alertModal("success","删除成功","删除' . $this->tName . '"+trNode.find("input").val()+"成功");
                                         trNode.remove();
                                     }
+									refreshRight();
                                 }
                                 else
                                     alertModal("danger","操作失败",data.msg);//操作失败
@@ -113,7 +114,7 @@ class AdminTags {
     </div>
 </div>
 </form>');
-		$html .= '</div></div></div>';
+		$html .= '</div></div>';
 		$ajaxAddUrl=$urlHandler->createUrl('ajax/AdminTags', 'add', array(),false);
 		$html .= ('<script type="text/javascript">
         $("#add_fenlei button").click(function(){
@@ -132,8 +133,9 @@ class AdminTags {
                     "t_type":' . $t_type . '
                 },
                 "success" : function(data) {
-                    if(data.success==1){
+                    if(data.success){
                         alertModal("success","添加成功","添加' . $this->tName . '"+tName+"成功");
+						refreshRight();
                     }
                     else
                         alertModal("danger","操作失败",data.msg);

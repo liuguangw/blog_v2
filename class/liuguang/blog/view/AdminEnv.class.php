@@ -40,7 +40,7 @@ class AdminEnv {
     <p class="form-control-static">'.$listInfo[1].'</p>
 </div></div>');
 		}
-		$html .= ('</form></div></div></div>');
+		$html .= ('</form></div></div>');
 		return $html;
 	}
 	public function getTitle() {

@@ -74,29 +74,55 @@ class TopicPage {
 		if ($tmp ['last_update'] != 0) {
 			$last_update_info = '&nbsp;&nbsp;最后修改于:' . date ( 'Y-m-d H:i:s', $tmp ['last_update'] );
 		}
-		$typeUrl=$urlHandler->createUrl('web/type', 'index', array('tid'=>$tmp ['leibie_id']));
+		$typeUrl = $urlHandler->createUrl ( 'web/TocType', 'index', array (
+				't_id' => $tmp ['leibie_id'] 
+		) );
 		$html = sprintf ( $nodeTpl, $tmp ['t_title'], date ( 'Y-m-d H:i:s', $tmp ['post_time'] ), $last_update_info, $tmp ['view_num'], $typeUrl, $tmp ['t_name'], $tmp ['t_content'], $taglist );
-		$edit_topic_url = $urlHandler->createUrl('web/BlogAdmin', 'edit', array('tid'=>$t_id));
+		$edit_topic_url = $urlHandler->createUrl ( 'web/BlogAdmin', 'editTopic', array (
+				't_id' => $t_id 
+		) );
 		$html .= ('<script type="text/javascript">
             if(blogInfo.is_login==1)
                 $("#topic_head_info").append("&nbsp; <a href=\"' . $edit_topic_url . '\"><span class=\"label label-primary\">管理文章</span></a>");
-                $("#topic_head_info a").bindPushState();
-                $("#tag_info a").bindPushState();
+            $("#topic_head_info a").bindPushState();
+            $("#tag_info a").bindPushState();
         </script>');
-		//回复列表
+		// 回复列表
 		$html .= '<div class="panel panel-default" id="reply_div">
           <div class="panel-heading">回复列表</div>';
-		$html .= $this->getReplyList ( $t_id);
+		$html .= $this->getReplyList ( $t_id );
 		$html .= '</div>';
 		// 判断博客是否允许回复
 		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key=\'allow_reply\'' );
 		$rst = $stm->fetch ();
 		if ($rst ['t_value'] == 1)
 			$html .= $this->getReplyEditor ( $t_id );
-		else
+		else {
 			$html .= '<div class="panel panel-default">
   <div class="panel-body">博主已关闭回复功能</div>
 </div>';
+		}
+		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
+		$ue_path = $blogContext . '/static/ueditor/';
+		$html .= ('<script type="text/javascript">
+			if(!blogInfo.load_js.shCore){
+			/*高亮插件*/
+				loadJsFile("' . $ue_path . 'third-party/SyntaxHighlighter/shCore.js",function(){
+					var oHead = document.getElementsByTagName("head")[0];
+					var cssObject = document.createElement("link");
+					cssObject.rel="stylesheet";
+					cssObject.type="text/css";
+					cssObject.href="' . $ue_path . 'third-party/SyntaxHighlighter/shCoreDefault.css";
+					cssObject.onload=function(){
+						SyntaxHighlighter.highlight();
+					};
+					oHead.appendChild(cssObject);
+					blogInfo.load_js.shCore=true;
+				});
+			}
+			else
+				SyntaxHighlighter.highlight();
+			</script>');
 		return $html;
 	}
 	public function getTitle() {
@@ -124,8 +150,8 @@ class TopicPage {
 		$uploadimageUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadimage', array (), false );
 		$uploadscrawlUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadscrawl', array (), false );
 		$uploadfileUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadfile', array (), false );
-		$doReplyUrl=$urlHandler->createUrl ( 'ajax/Topic', 'doReply', array (), false );
-		$loadReplyUrl=$urlHandler->createUrl ( 'ajax/Topic', 'loadReply', array (), false );
+		$doReplyUrl = $urlHandler->createUrl ( 'ajax/Topic', 'doReply', array (), false );
+		$loadReplyUrl = $urlHandler->createUrl ( 'ajax/Topic', 'loadReply', array (), false );
 		$html .= '<div class="row">
 <div class="col-sm-12">
     <!-- 加载编辑器的容器 -->
@@ -188,7 +214,7 @@ class TopicPage {
                 "t_contents":ue.getContent()
             },
             "success" : function(data) {
-                if(data.success==1){
+                if(data.success){
                 /*刷新底部评论列表*/
                 $.ajax({
                             "url" : "' . $loadReplyUrl . '",
@@ -200,6 +226,7 @@ class TopicPage {
                             },
                             "success" : function(data) {
                             $("#reply_div").html("<div class=\"panel-heading\">回复列表</div>"+data.msg);
+							SyntaxHighlighter.highlight();
                             },
                             "error" : function(jqXHR, textStatus, errorThrown) {
                                 alertModal("danger","异步失败",errorThrown);/*异步失败*/
@@ -215,12 +242,12 @@ class TopicPage {
         });/*end ajax*/
     });
     </script>');
-		$html .= ('</form></div></div></div>');
+		$html .= ('</form></div></div>');
 		return $html;
 	}
 	public function getReplyList($t_id) {
-		$db=$this->db;
-		$tablePre=$this->tablePre;
+		$db = $this->db;
+		$tablePre = $this->tablePre;
 		$stm = $db->query ( 'SELECT COUNT(*) as reply_num FROM ' . $tablePre . 'reply WHERE topic_id=' . $t_id );
 		$rst = $stm->fetch ();
 		if ($rst ['reply_num'] == 0) {

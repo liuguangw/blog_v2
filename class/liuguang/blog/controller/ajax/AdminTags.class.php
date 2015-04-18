@@ -172,6 +172,12 @@ class AdminTags extends BaseAdmin {
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
+		if($this->tagInUse($tagId, $tagType)){
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ['msg'] = '有文章使用了这个'.$t_str . ',不能执行删除';
+			echo json_encode ( $ajaxReturn );
+			return;
+		}
 		$sql = 'DELETE FROM ' . $tableName . ' WHERE t_id=' . $tagId;
 		if ($this->getDb ()->exec ( $sql ) === false) {
 			$ajaxReturn ['success'] = false;
@@ -180,6 +186,29 @@ class AdminTags extends BaseAdmin {
 			return;
 		}
 		echo json_encode ( $ajaxReturn );
+	}
+
+	/**
+	 * 判断标签或者分类id是否被帖子使用中
+	 *
+	 * @param int $tagId
+	 *        	标签id或者分类id
+	 * @param int $tagType
+	 *        	1表示标签,2表示分类
+	 * @return boolean
+	 */
+	private function tagInUse($tagId, $tagType){
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$sql = 'SELECT COUNT(*) AS s_num FROM ' . $tablePre;
+		if ($tagType == 1)
+			$sql .= 'topic_tag WHERE tag_id=';
+		else
+			$sql .= 'topic WHERE leibie_id=';
+		$sql .= $tagId;
+		$stm = $db->query ( $sql );
+		$rst = $stm->fetch ();
+		return ($rst ['s_num'] != 0);
 	}
 	/**
 	 * 判断标签或者分类id是否存在

@@ -12,7 +12,7 @@ use liuguang\blog\controller\BaseController;
  * @author liuguang
  *        
  */
-class Install extends BaseController{
+class Install extends BaseController {
 	/**
 	 * 检测某行的输入
 	 *
@@ -129,7 +129,9 @@ class Install extends BaseController{
 		header ( 'Content-Type: application/json' );
 		// 判断是否已经安装
 		$app = Application::getApp ();
-		$blogInit = $app->getAppConfig ()->get ( 'blogInit' );
+		$appConfig = $app->getAppConfig ();
+		$blogInit = $appConfig->get ( 'blogInit' );
+		date_default_timezone_set ( $appConfig->get ( 'timeZone' ) );
 		if ($blogInit) {
 			$result = array (
 					'success' => false,
@@ -146,65 +148,69 @@ class Install extends BaseController{
 			echo json_encode ( $result );
 			return;
 		}
-		//执行安装
-		$db=$this->getDb();
-		$tablePre=$this->getTablePre();
-		$result['success']=$this->execSql($postData,$db,$userModel,$tablePre);
-		if(!$result['success']){
-			$errInfo=$db->errorInfo();
-			$result['msg']='数据导入出错:'.$errInfo[2];
+		// 执行安装
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$result ['success'] = $this->execSql ( $postData, $db, $userModel, $tablePre );
+		if (! $result ['success']) {
+			$errInfo = $db->errorInfo ();
+			$result ['msg'] = '数据导入出错:' . $errInfo [2];
 		}
-			echo json_encode ( $result );
+		echo json_encode ( $result );
 	}
 	/**
 	 * 将数据导入数据库
-	 * 
-	 * @param DataMap $postData 用户提交的数据对象
-	 * @param \PDO $db 数据库对象
-	 * @param User $userModel 处理用户数据的对象
-	 * @param string $tablePre 博客的数据表前缀
+	 *
+	 * @param DataMap $postData
+	 *        	用户提交的数据对象
+	 * @param \PDO $db
+	 *        	数据库对象
+	 * @param User $userModel
+	 *        	处理用户数据的对象
+	 * @param string $tablePre
+	 *        	博客的数据表前缀
 	 * @return boolean 若全部导入成功则为true,否则为false
 	 */
-	private function execSql(DataMap $postData,\PDO $db,User $userModel,$tablePre){
-
+	private function execSql(DataMap $postData, \PDO $db, User $userModel, $tablePre) {
+		
 		// 文章类别表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'leibie' )===false)
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'leibie' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'leibie(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'leibie(
 				t_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				t_name varchar(255) NOT NULL,
 				create_time int UNSIGNED NOT NULL,
 				PRIMARY KEY (t_id),
 				UNIQUE (t_name)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 标签类别表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'tag' )===false)
+			// 标签类别表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'tag' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'tag(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'tag(
 				t_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				t_name varchar(255) NOT NULL,
 				create_time int UNSIGNED NOT NULL,
 				PRIMARY KEY (t_id),
 				UNIQUE (t_name)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 文章标签表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'topic_tag' )===false)
+			// 文章标签表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'topic_tag' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'topic_tag(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'topic_tag(
 				index_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				topic_id int UNSIGNED NOT NULL,
 				tag_id int UNSIGNED NOT NULL,
 				add_time int UNSIGNED NOT NULL,
 				PRIMARY KEY (index_id),
 				UNIQUE (topic_id,tag_id)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 博客文章表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'topic' )===false)
+			// 博客文章表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'topic' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'topic(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'topic(
 				t_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				t_title varchar(35) NOT NULL,
 				t_content text NOT NULL,
@@ -215,12 +221,12 @@ class Install extends BaseController{
 				post_ym int UNSIGNED NOT NULL,
 				view_num int UNSIGNED NOT NULL,
 				PRIMARY KEY (t_id)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 文章评论表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'reply' )===false)
+			// 文章评论表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'reply' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'reply(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'reply(
 				t_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				topic_id int UNSIGNED NOT NULL,
 				t_user varchar(20) NOT NULL,
@@ -228,46 +234,60 @@ class Install extends BaseController{
 				t_content text NOT NULL,
 				post_time int UNSIGNED NOT NULL,
 				PRIMARY KEY (t_id)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 博客中文件管理处上传的文件表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'blog_upload' )===false)
+			// 博客中文件管理处上传的文件表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'blog_upload' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'blog_upload(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'blog_upload(
 				index_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				obj_name varchar(500) NOT NULL,
 				obj_beizhu varchar(500) NOT NULL,
 				add_time int UNSIGNED NOT NULL,
 				PRIMARY KEY (index_id)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 留言表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'liuyan' )===false)
+			// 留言表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'liuyan' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'liuyan(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'liuyan(
 				t_id int UNSIGNED NOT NULL AUTO_INCREMENT,
 				t_user varchar(20) NOT NULL,
 				is_admin_post tinyint(1) NOT NULL,
 				t_content text NOT NULL,
 				post_time int UNSIGNED NOT NULL,
 				PRIMARY KEY (t_id)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 博客配置表
-		if($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'config' )===false)
+			// 博客配置表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'config' ) === false)
 			return false;
-		if($db->exec ( 'CREATE TABLE ' . $tablePre . 'config(
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'config(
 				t_key varchar(255) NOT NULL,
 				t_value varchar(2000) NOT NULL,
 				PRIMARY KEY (t_key)
-		)' )===false)
+		)' ) === false)
 			return false;
-		// 初始数据导入。。。
-		$sql='INSERT INTO %sconfig(t_key,t_value) VALUES (\'username\',\'%s\'),(\'pass\',\'%s\'),(\'blogname\',\'%s\'),(\'nickname\',\'%s\'),(\'install_time\',\'%d\')';
-		if($db->exec(sprintf($sql,$tablePre,$_POST['username'],$userModel->encodePass($_POST['username'], $_POST['pass1']),addslashes($_POST['blogname']),addslashes($_POST['nickname']),time()))===false)
+			// 初始数据导入。。。
+		$sql = 'INSERT INTO %sconfig(t_key,t_value) VALUES (\'username\',\'%s\'),(\'pass\',\'%s\'),(\'blogname\',\'%s\'),(\'nickname\',\'%s\'),(\'install_time\',\'%d\')';
+		if ($db->exec ( sprintf ( $sql, $tablePre, $_POST ['username'], $userModel->encodePass ( $_POST ['username'], $_POST ['pass1'] ), addslashes ( $_POST ['blogname'] ), addslashes ( $_POST ['nickname'] ), time () ) ) === false)
 			return false;
-		$sql='INSERT INTO %sconfig(t_key,t_value) VALUES (\'description\',\'本博客程序由流光开发制作\'),(\'descr_color\',\'#666666\'),(\'bg_img\',\'\'),(\'top_img\',\'\'),(\'touxiang_img\',\'\'),(\'allow_reply\',\'1\'),(\'allow_liuyan\',\'1\'),(\'open_compress\',\'1\'),(\'blogname_color\',\'#0B0BEE\'),(\'nav_color\',\'#90DDD7\'),(\'nav_active_color\',\'#333\'),(\'abouts\',\'流光博客。。。。。。。。。。。。。。。。\')';
-		if($db->exec(sprintf($sql,$tablePre)) === false)
+		$sql = 'INSERT INTO %sconfig(t_key,t_value) VALUES (\'description\',\'本博客程序由流光开发制作\'),(\'blog_bottom\',\'Powered by liuguang\'),(\'descr_color\',\'#666666\'),(\'bg_img\',\'\'),(\'top_img\',\'\'),(\'touxiang_img\',\'\'),(\'allow_reply\',\'1\'),(\'allow_liuyan\',\'1\'),(\'open_compress\',\'1\'),(\'blogname_color\',\'#0B0BEE\'),(\'nav_color\',\'#90DDD7\'),(\'nav_active_color\',\'#333\'),(\'blog_keywords\',\'流光博客,php\'),(\'abouts\',\'流光博客。。。。。。。。。。。。。。。。\')';
+		if ($db->exec ( sprintf ( $sql, $tablePre ) ) === false)
+			return false;
+			// 导入默认分类
+		$sql = 'INSERT INTO %sleibie(t_id,t_name,create_time) VALUES (1,\'默认分类\',%d)';
+		if ($db->exec ( sprintf ( $sql, $tablePre, time () ) ) === false)
+			return false;
+			// 导入默认文章
+		$postTime = time ();
+		$postYm = date ( 'Ym' );
+		$t_content = '<p>
+    <span style="color: rgb(49, 133, 155);">如果你看到了这篇文章，那么说明博客已经安装成功了。</span>
+</p>';
+		$t_prev_text = '如果你看到了这篇文章，那么说明博客已经安装成功了。';
+		$sql = 'INSERT INTO %stopic(t_id,t_title,t_content,t_prev_text,leibie_id,last_update,post_time,post_ym,view_num) VALUES (1,\'%s\',\'%s\',\'%s\',1,0,%d,%d,0)';
+		if ($db->exec ( sprintf ( $sql, $tablePre, '你好，世界', $t_content, $t_prev_text, $postTime, $postYm ) ) === false)
 			return false;
 		return true;
 	}

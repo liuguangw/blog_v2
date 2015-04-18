@@ -35,11 +35,13 @@ function loadUrl(url) {
  */
 $.fn.bindPushState = function() {
 	$(this).click(function(evt) {
-		evt.preventDefault();
-		history.pushState({
-			"state_url" : this.href
-		}, "", this.href);
-		loadUrl(this.href);
+		if ("pushState" in history) {
+			evt.preventDefault();
+			history.pushState({
+				"state_url" : this.href
+			}, "", this.href);
+			loadUrl(this.href);
+		}
 	});
 	return $(this);
 };
@@ -161,10 +163,6 @@ function blogInit(nIndex) {
 	$("#main_navbar a:eq(" + nIndex + ")").addClass("active");
 	// 判断是否支持 pushState
 	if ("pushState" in history) {
-		$("#main_navbar a").bindPushState().click(function() {
-			updateNav(this);
-		});
-		$("#admin_list a:lt(6)").bindPushState();
 		// 浏览器前进、后退
 		window.addEventListener('popstate', function(e) {
 			if (history.state) {
@@ -172,22 +170,128 @@ function blogInit(nIndex) {
 			}
 		}, false);
 	}
-	// 其他内容替换
+	$("#main_navbar a").bindPushState().click(function() {
+		updateNav(this);
+	});
+	// 管理连接生成
+	var adminUrlarr = [ {
+		"name" : "博客设置",
+		"action" : "sets",
+		"type" : 1
+	}, {
+		"name" : "分类管理",
+		"action" : "types",
+		"type" : 1
+	}, {
+		"name" : "标签管理 ",
+		"action" : "tags",
+		"type" : 1
+	}, {
+		"name" : "文件管理",
+		"action" : "files",
+		"type" : 1
+	}, {
+		"name" : "发表文章",
+		"action" : "postTopic",
+		"type" : 1
+	}, {
+		"type" : 0
+	}, {
+		"name" : "博客环境信息",
+		"action" : "env",
+		"type" : 1
+	}, {
+		"name" : "注销登录",
+		"action" : "javascript:logoutConfirm()",
+		"type" : 2
+	}, ], adminListHtml = "", i;
+	for (i = 0; i < adminUrlarr.length; i++) {
+		if (adminUrlarr[i].type == 0)
+			adminListHtml += "<li role=\"presentation\" class=\"divider\"></li>";
+		else if (adminUrlarr[i].type == 1) {
+			adminListHtml += "<li role=\"presentation\">";
+			adminListHtml += ("<a role=\"menuitem\" tabindex=\"-1\" href=\""
+					+ blogInfo.adminUrlTpl.replace(/\[action\]/,
+							adminUrlarr[i].action) + "\">"
+					+ adminUrlarr[i].name + "</a>");
+			adminListHtml += "</li>";
+		} else {
+			adminListHtml += "<li role=\"presentation\">";
+			adminListHtml += ("<a role=\"menuitem\" tabindex=\"-1\" href=\""
+					+ adminUrlarr[i].action + "\">" + adminUrlarr[i].name + "</a>");
+			adminListHtml += "</li>";
+		}
+	}
+	$("#admin_list").html(adminListHtml);
+	$("#admin_list a:lt(6)").bindPushState();
+	/* 其他内容替换 */
 	$("#touxiang").html(
 			"<img class=\"img-thumbnail\" src=\"" + blogInfo.touxiang_img
 					+ "\" width=\"150\" height=\"150\" title=\""
 					+ blogInfo.nickname + "\" alt=\"头像\"/>");
 	$("#blogname").html(blogInfo.blogname);
 	$("#description").html(blogInfo.description);
-	// 更新登录状态
+	/* 更新登录状态 */
 	updateUserArea(blogInfo.is_login);
-	// 登录界面
+	/* 登录界面代码生成 */
+	var loginDivBody = "<form class=\"form-horizontal\">", loginDivFooter = "<button type=\"button\" class=\"btn btn-default\"\
+								data-dismiss=\"modal\">取消</button>\
+							<button id=\"login_btn\" type=\"button\" class=\"btn btn-primary\">登录博客</button>";
+	loginDivBody += "<div class=\"row\">\
+			<div class=\"col-md-12\">\
+				<div id=\"login_err_tip\" class=\"alert alert-danger\"\
+					role=\"alert\">登录错误提示</div>\
+			</div>\
+	</div>\
+	<div class=\"form-group\">\
+		<label for=\"username\" class=\"col-sm-2 control-label\">用户名</label>\
+		<div class=\"col-md-9\">\
+			<input type=\"text\" class=\"form-control\" id=\"username\"\
+				placeholder=\"用户名\">\
+		</div>\
+	</div>\
+	<div class=\"form-group\">\
+		<label for=\"pass\" class=\"col-md-2 control-label\">密码</label>\
+		<div class=\"col-md-9\">\
+			<input type=\"password\" class=\"form-control\" id=\"pass\"\
+				placeholder=\"密码\">\
+		</div>\
+	</div>\
+	<div class=\"form-group\">\
+		<label for=\"rcode\" class=\"col-md-2 control-label\">验证码</label>\
+		<div class=\"col-md-6\">\
+			<input type=\"text\" class=\"form-control\" id=\"rcode\"\
+				placeholder=\"验证码\">\
+		</div>\
+		<div class=\"col-md-3\">\
+			<p class=\"form-control-static\">\
+				<a id=\"rcode_new\" href=\"javascript:void(0)\" title=\"换一张\">换一张？</a>\
+			</p>\
+		</div>\
+	</div>\
+	<div class=\"form-group\">\
+		<div class=\"col-md-offset-2 col-md-9\">\
+			<img id=\"rcode_img\" src=\"\" draggable=\"false\" alt=\"验证码\"\
+				title=\"点击刷新\" />\
+		</div>\
+	</div>";
+	loginDivBody += "</form>";
+	$("#login_div").html(
+			createModalDiv(blogInfo.blogname + "-登录", loginDivBody,
+					loginDivFooter));
+	/* 消息提示模态框 */
+	$("#msg_div").html(
+			createModalDiv("Modal title",
+					"<div class=\"alert alert-danger\" role=\"alert\"></div>",
+					""));
+	/* 登录界面验证码刷新 */
 	var reloadRcode = function() {
 		$("#rcode_img").attr("src", getRcodeUrl());
 	}
 	reloadRcode();
 	$("#rcode_img").click(reloadRcode);
 	$("#rcode_new").click(reloadRcode);
+
 	$("#login_div input").focus(function() {
 		$("#login_err_tip").hide();
 	}).keydown(function(event) {
@@ -196,7 +300,6 @@ function blogInit(nIndex) {
 			postLoginForm();
 		}
 	});
-	$("#login_div h4").html(blogInfo.blogname + "- 登录");
 	$("#login_btn").click(postLoginForm);
 
 	$("#user_area").click(function() {
@@ -248,4 +351,55 @@ function loadJsFile(jsFile, fn) {
 	jsObject.defer = "defer";
 	jsObject.onload = fn;
 	oHead.appendChild(jsObject);
+}
+/**
+ * 模态框代码生成
+ * 
+ * @param modal_title
+ *            标题
+ * @param modal_body
+ *            内容部分
+ * @param modal_footer
+ *            底部
+ * @returns String
+ */
+function createModalDiv(modal_title, modal_body, modal_footer) {
+	var divHtml = "<div class=\"modal-dialog\">\
+					<div class=\"modal-content\">\
+						<div class=\"modal-header\">\
+							<button type=\"button\" class=\"close\" data-dismiss=\"modal\"\
+								aria-label=\"Close\">\
+								<span aria-hidden=\"true\">&times;</span>\
+							</button>\
+							<h4 class=\"modal-title\">"
+			+ modal_title + "</h4>\
+						</div>";
+	divHtml += ("<div class=\"modal-body\">" + modal_body + "</div>");
+	if (modal_footer != "")
+		divHtml += ("<div class=\"modal-footer\">" + modal_footer + "</div>");
+	divHtml += "</div></div>";
+	return divHtml;
+}
+/**
+ * 刷新右侧的区域
+ */
+function refreshRight() {
+	$.ajax({
+		"url" : blogInfo.refreshRUrl,
+		"method" : "POST",
+		"cache" : false,
+		"dataType" : "json",
+		"success" : function(data) {
+			$("#blog_right").animate({
+				"opacity" : 0
+			}, "fast", "swing", function() {
+				$(this).html(data.html);
+				$("#blog_right").animate({
+					"opacity" : 100
+				}, "fast", "swing");
+			});
+		},
+		"error" : function(jqXHR, textStatus, errorThrown) {
+		}
+	});
 }

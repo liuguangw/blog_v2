@@ -5,7 +5,6 @@ namespace liuguang\blog\controller\ajax;
 use liuguang\blog\controller\BaseController;
 use liuguang\mvc\Application;
 use liuguang\mvc\FsException;
-use liuguang\mvc\FileBucket;
 
 /**
  *

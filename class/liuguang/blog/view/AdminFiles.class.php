@@ -44,7 +44,7 @@ class AdminFiles {
 			else
 				$html .= $this->getFsTable ( $page, $perPage, $page_num, $urlHandler );
 		} // end else
-		$html .= '</div></div></div>';
+		$html .= '</div></div>';
 		$html .= '<div class="panel panel-default">
   <div class="panel-heading">文件上传</div>
   <div class="panel-body">';
@@ -152,7 +152,7 @@ class AdminFiles {
                 $(this).bindPushState();
         });
         </script>');
-		$html .= '</div></div></div>';
+		$html .= '</div></div>';
 		return $html;
 	}
 	/**

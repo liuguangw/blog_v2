@@ -28,10 +28,15 @@ class BlogRight {
 				'page' => 1 
 		) );
 		$aBlind='<script type="text/javascript">
-            $("#types_div a").bindPushState();
+        $("#types_div a:not([class=\"pull-right\"])").bindPushState().click(function(){
+			updateNav("#main_navbar a:eq(2)");	
+		});
         </script>';
 		$html = '<div id="types_div" class="panel panel-default">
-  <div class="panel-heading"><a href="' . $blogTypesUrl . '">文章分类</a></div>';
+  <div class="panel-heading">
+	<a href="' . $blogTypesUrl . '">文章分类</a>
+	<a href="javascript:refreshRight();" class="pull-right"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+  </div>';
 		// 获取类别总数目
 		$stm = $this->db->query ( 'SELECT COUNT(*) AS s_num FROM ' . $this->tablePre . 'leibie' );
 		$rst = $stm->fetch ();
@@ -62,10 +67,15 @@ class BlogRight {
 				'page' => 1 
 		) );
 		$aBlind='<script type="text/javascript">
-            $("#archives a").bindPushState();
+        $("#archives a:not([class=\"pull-right\"])").bindPushState().click(function(){
+			updateNav("#main_navbar a:eq(3)");	
+		});
         </script>';
 		$html = '<div id="archives" class="panel panel-default">
-  <div class="panel-heading"><a href="' . $blogArchUrl . '">文章归档</a></div>';
+  <div class="panel-heading">
+	<a href="' . $blogArchUrl . '">文章归档</a>
+	<a href="javascript:refreshRight();" class="pull-right"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+  </div>';
 		// 获取发表文章的总数目
 		$stm = $this->db->query ( 'SELECT COUNT(*) AS s_num FROM ' . $this->tablePre . 'topic' );
 		$rst = $stm->fetch ();
@@ -74,6 +84,7 @@ class BlogRight {
 </div>';
 			return $html.$aBlind;
 		}
+		$html .= '<div class="list-group">';
 		$listTpl = '<a href="%s" class="list-group-item">
             <span class="badge">%d</span> %s
             </a>';

@@ -115,8 +115,10 @@ class PostTopic {
                 "tag_ids":tag_ids
             },
             "success" : function(data) {
-                if(data.success)
+                if(data.success){
                     alertModal("success","发表成功","发表文章成功");
+					refreshRight();
+				}
                 else
                     alertModal("danger","发表失败",data.msg);
             },
@@ -128,7 +130,7 @@ class PostTopic {
     </script>');
 		} else
 			$html .= '<div class="row"><div class="alert alert-danger" role="alert">没有分类可供选择,请先创建一个分类</div></div>';
-		$html .= ('</form></div></div></div>');
+		$html .= ('</form></div></div>');
 		return $html;
 	}
 	/**

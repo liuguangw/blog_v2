@@ -3,7 +3,6 @@
 namespace liuguang\blog\controller\ajax;
 
 use liuguang\mvc\DataMap;
-use liuguang\blog\view\TopicPage;
 use liuguang\blog\view\Liuyan as BlogLiuyan;
 use liuguang\mvc\Application;
 

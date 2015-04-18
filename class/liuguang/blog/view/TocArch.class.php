@@ -5,17 +5,19 @@ namespace liuguang\blog\view;
 use liuguang\mvc\Application;
 
 /**
- * 文章一览
+ * 某个时间的文章归档列表
  *
  * @author liuguang
  *        
  */
-class BlogList implements TopicListInter {
+class TocArch implements TopicListInter {
 	private $db;
 	private $tablePre;
-	public function __construct(\PDO $db, $tablePre) {
+	private $t_id;
+	public function __construct(\PDO $db, $tablePre,$t_id) {
 		$this->db = $db;
 		$this->tablePre = $tablePre;
+		$this->t_id=$t_id;
 	}
 	
 	/**
@@ -25,7 +27,7 @@ class BlogList implements TopicListInter {
 	 *
 	 */
 	public function getTopicCount() {
-		$stm = $this->db->query ( 'SELECT COUNT(*) AS topic_num FROM ' . $this->tablePre . 'topic' );
+		$stm = $this->db->query ( 'SELECT COUNT(*) AS topic_num FROM ' . $this->tablePre . 'topic WHERE post_ym='.$this->t_id );
 		$rst = $stm->fetch ();
 		return $rst ['topic_num'];
 	}
@@ -39,7 +41,8 @@ class BlogList implements TopicListInter {
 	public function getUrlTpl() {
 		$app = Application::getApp ();
 		$urlHandler = $app->getUrlHandler ();
-		return $urlHandler->createUrl ( 'web/BlogList', 'index', array (
+		return $urlHandler->createUrl ( 'web/TocArch', 'index', array (
+				't_id'=>$this->t_id,
 				'page' => '%d' 
 		) );
 	}
@@ -72,7 +75,8 @@ class BlogList implements TopicListInter {
 	 */
 	public function getSelectSql($page) {
 		$limit = $this->getPerPage ();
-		$sql = 'SELECT t_id,t_title,t_prev_text,post_time FROM ' . $this->tablePre . 'topic ORDER BY t_id DESC Limit ' . ($page - 1) * $limit . ',' . $limit;
+		$sql='SELECT t_id,t_title,t_prev_text,post_time FROM ' . $this->tablePre. 'topic WHERE post_ym='.$this->t_id.' ORDER BY t_id DESC';
+		$sql.= (' LIMIT ' . ($page - 1) * $limit . ',' . $limit);
 		return $sql;
 	}
 	
@@ -83,7 +87,8 @@ class BlogList implements TopicListInter {
 	 *
 	 */
 	public function getStr($page) {
-		return '文章一览-第'.$page.'页';
+		$str='['.substr($this->t_id, 0,4).'年'.substr($this->t_id, 4).'月]'.'-第'.$page.'页';
+		return $str;
 	}
 	
 	/**

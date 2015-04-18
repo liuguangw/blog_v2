@@ -38,6 +38,27 @@ class Liuyan {
           <div class="panel-heading">留言列表第' . $page . '页</div>';
 		$html .= $this->getList ( $urlHandler, $page  );
 		$html .= '</div>';
+		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
+		$ue_path = $blogContext . '/static/ueditor/';
+		$html .= ('<script type="text/javascript">
+			if(!blogInfo.load_js.shCore){
+			/*高亮插件*/
+				loadJsFile("' . $ue_path . 'third-party/SyntaxHighlighter/shCore.js",function(){
+					var oHead = document.getElementsByTagName("head")[0];
+					var cssObject = document.createElement("link");
+					cssObject.rel="stylesheet";
+					cssObject.type="text/css";
+					cssObject.href="' . $ue_path . 'third-party/SyntaxHighlighter/shCoreDefault.css";
+					cssObject.onload=function(){
+						SyntaxHighlighter.highlight();
+					};
+					oHead.appendChild(cssObject);
+					blogInfo.load_js.shCore=true;
+				});
+			}
+			else
+				SyntaxHighlighter.highlight();
+			</script>');
 		return $html;
 	}
 	public function getTitle($page) {
@@ -126,7 +147,7 @@ class Liuyan {
                 "t_contents":ue.getContent()
             },
             "success" : function(data) {
-                if(data.success==1){
+                if(data.success){
                 /*刷新底部留言列表*/
                 $.ajax({
                             "url" : "' . $loadLiuyanUrl . '",
@@ -138,6 +159,7 @@ class Liuyan {
                             },
                             "success" : function(data) {
                             $("#reply_div").html("<div class=\"panel-heading\">留言列表第' . $page . '页</div>"+data.msg);
+							SyntaxHighlighter.highlight();
                             },
                             "error" : function(jqXHR, textStatus, errorThrown) {
                                 alertModal("danger","异步失败",errorThrown);/*异步失败*/
@@ -153,7 +175,7 @@ class Liuyan {
         });/*end ajax*/
     });
     </script>');
-		$html .= ('</form></div></div></div>');
+		$html .= ('</form></div></div>');
 		return $html;
 	}
 	public function getList(UrlHandler $urlHandler, $page) {

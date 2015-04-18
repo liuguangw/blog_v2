@@ -16,7 +16,8 @@ class AdminSets {
 		$this->db = $db;
 		$this->tablePre = $tablePre;
 	}
-	public function getHtml(){ $inputs = array (
+	public function getHtml(){
+		$inputs = array (
                 array (
                         'nickname',
                         'text',
@@ -58,10 +59,16 @@ class AdminSets {
                         'text',
                         '导航条激活颜色',
                         '' 
+                ) ,
+                array (
+                        'blog_keywords',
+                        'text',
+                        '搜索引擎关键字',
+                        '' 
                 ) 
         );
             $result = array ();
-            $stm = $this->db->query ( 'SELECT * FROM ' . $this->tablePre . 'config WHERE t_key IN(\'username\',\'nickname\',\'blogname\',\'blogname_color\',\'description\',\'abouts\',\'descr_color\',\'nav_color\',\'nav_active_color\',\'open_compress\',\'allow_liuyan\',\'allow_reply\',\'bg_img\',\'top_img\',\'touxiang_img\')' );
+            $stm = $this->db->query ( 'SELECT * FROM ' . $this->tablePre . 'config WHERE t_key IN(\'username\',\'nickname\',\'blogname\',\'blogname_color\',\'description\',\'blog_bottom\',\'abouts\',\'descr_color\',\'nav_color\',\'nav_active_color\',\'blog_keywords\',\'open_compress\',\'allow_liuyan\',\'allow_reply\',\'bg_img\',\'top_img\',\'touxiang_img\')' );
             while ( $tmp = $stm->fetch () ) {
                 $result [$tmp ['t_key']] = $tmp ['t_value'];
             }
@@ -72,6 +79,7 @@ class AdminSets {
             $inputs [4] [3] = $result ['descr_color'];
             $inputs [5] [3] = $result ['nav_color'];
             $inputs [6] [3] = $result ['nav_active_color'];
+            $inputs [7] [3] = $result ['blog_keywords'];
         $html = '<div class="panel panel-default">
   <div class="panel-heading">博客基础设置</div>
   <div class="panel-body">
@@ -91,13 +99,19 @@ class AdminSets {
 <textarea id="abouts_sets" class="form-control" rows="4">'.htmlspecialchars($result['abouts']).'</textarea>
 </div>
 </div>');
+        $html.=('<div class="form-group">
+<label for="blog_bottom" class="col-sm-3 control-label">博客底部代码</label>
+<div class="col-sm-8">
+<textarea id="blog_bottom" class="form-control" rows="4">'.htmlspecialchars($result['blog_bottom']).'</textarea>
+</div>
+</div>');
         $html .= ('<div class="form-group">
 <div class="col-sm-2 col-sm-offset-8">
     <button type="button" class="btn btn-primary">更新设置</button>
 </div>
 </div>');
         
-        $html .= ('</form></div></div></div>');
+        $html .= ('</form></div></div>');
         $html .= '<div class="panel panel-default">
   <div class="panel-heading">URL设置</div>
   <div class="panel-body">
@@ -131,7 +145,7 @@ class AdminSets {
     <button type="button" class="btn btn-primary">修改设置</button>
 </div>
 </div>');
-        $html .= ('</form></div></div></div>');
+        $html .= ('</form></div></div>');
         $inputs2 = array (
                 array (
                         'open_compress',
@@ -175,7 +189,7 @@ class AdminSets {
     <button type="button" class="btn btn-primary">修改设置</button>
 </div>
 </div>');
-        $html .= ('</form></div></div></div>');
+        $html .= ('</form></div></div>');
         $html .= '<div class="panel panel-default">
   <div class="panel-heading">修改用户名密码</div>
   <div class="panel-body">
@@ -224,7 +238,7 @@ class AdminSets {
     <button type="button" class="btn btn-primary">修改密码</button>
 </div>
 </div>');
-        $html .= ('</form></div></div></div>');
+        $html .= ('</form></div></div>');
         $html.='<script type="text/javascript">
         $("#sets_common_form button").click(function(){
             var r=confirm("你确定要更新配置吗?");
@@ -243,7 +257,8 @@ class AdminSets {
                     "descr_color": $("#descr_color_sets").val(),
                     "nav_color": $("#nav_color_sets").val(),
                     "nav_active_color": $("#nav_active_color_sets").val(),
-                    "abouts":$("#abouts_sets").val()
+                    "abouts":$("#abouts_sets").val(),
+                	"blog_bottom":$("#blog_bottom").val()
                 },
                 "success" : function(data) {
                     if(data.success)

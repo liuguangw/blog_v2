@@ -28,7 +28,7 @@ $config['defaultC']='Index';
 $config['defaultA']='index';
 $config['404C']='Err404';
 //------
-$config['blogInit']=true;
+$config['blogInit']=false;
 $config['blogDbId']=0;
 $config['blogFsId']=0;
 $config['blogTablePre']='pre_';
