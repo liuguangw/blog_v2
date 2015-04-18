@@ -44,6 +44,7 @@ class Liuyan extends BaseAdmin {
 					'loadClass' 
 			) );
 			$conf = \HTMLPurifier_Config::createDefault ();
+			$conf->set('Core.DefinitionCache', null);
 			$purifier = new \HTMLPurifier ( $conf );
 			$t_contents = $purifier->purify ( $t_contents );
 		}
