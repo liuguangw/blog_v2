@@ -102,7 +102,7 @@ class AdminSets {
         $html.=('<div class="form-group">
 <label for="blog_bottom" class="col-sm-3 control-label">博客底部代码</label>
 <div class="col-sm-8">
-<textarea id="blog_bottom" class="form-control" rows="4">'.htmlspecialchars($result['blog_bottom']).'</textarea>
+<textarea id="blog_bottom_sets" class="form-control" rows="4">'.htmlspecialchars($result['blog_bottom']).'</textarea>
 </div>
 </div>');
         $html .= ('<div class="form-group">
@@ -257,8 +257,9 @@ class AdminSets {
                     "descr_color": $("#descr_color_sets").val(),
                     "nav_color": $("#nav_color_sets").val(),
                     "nav_active_color": $("#nav_active_color_sets").val(),
+					"blog_keywords":$("#blog_keywords_sets").val(),
                     "abouts":$("#abouts_sets").val(),
-                	"blog_bottom":$("#blog_bottom").val()
+                	"blog_bottom":$("#blog_bottom_sets").val()
                 },
                 "success" : function(data) {
                     if(data.success)
