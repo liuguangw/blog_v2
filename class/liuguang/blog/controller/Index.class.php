@@ -30,7 +30,8 @@ class Index extends BaseController {
 				'load_js' => array (
 						'ueditor' => false,
 						'uploadify' => false,
-						'shCore' => false 
+						'shCore' => false,
+						'baiduShare'=>false
 				) 
 		);
 		if (! isset ( $_COOKIE ['osid'] ))

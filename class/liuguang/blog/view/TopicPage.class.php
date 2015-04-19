@@ -112,7 +112,12 @@ window._bd_share_config = {
     "bdSelectMiniList": ["qzone", "tsina", "tqq", "weixin", "tieba", "renren"]
   }
 };
-document.write(unescape("%3Cscript%20type%3D%22text/javascript%22%20src%3D%22http%3A//bdimg.share.baidu.com/static/api/js/share.js%3Fv%3D89860593.js%3Fcdnversion%3D")+(~ ( - new Date() / 36e5))+unescape("%22%3E%3C/script%3E"));
+if(!blogInfo.load_js.baiduShare)
+	loadJsFile("http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion="+~(-new Date()/36e5),function(){
+		blogInfo.load_js.baiduShare=true;
+	});
+else
+	window._bd_share_main.init();
 </script>';
 		$html = sprintf ( $nodeTpl, $tmp ['t_title'], date ( 'Y-m-d H:i:s', $tmp ['post_time'] ), $last_update_info, $tmp ['view_num'], $typeUrl, $tmp ['t_name'], $tmp ['t_content'],$shareCode, $taglist );
 		$edit_topic_url = $urlHandler->createUrl ( 'web/BlogAdmin', 'editTopic', array (
