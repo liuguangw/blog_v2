@@ -101,15 +101,6 @@ window._bd_share_config = {
   },
   "share": {
     "bdSize": 16
-  },
-  "image": {
-    "viewList": ["qzone", "tsina", "tqq", "weixin", "tieba", "renren"],
-    "viewText": "分享到：",
-    "viewSize": "16"
-  },
-  "selectShare": {
-    "bdContainerClass": null,
-    "bdSelectMiniList": ["qzone", "tsina", "tqq", "weixin", "tieba", "renren"]
   }
 };
 if(!blogInfo.load_js.baiduShare)
