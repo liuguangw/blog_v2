@@ -62,6 +62,15 @@ class StaticUrlHandler implements UrlHandler {
 		$urlData->set($this->cKey, $data[0].'/'.$data[1]);
 		$urlData->set($this->aKey, $data[2]);
 		$mapKey=$data[0].'/'.$data[1].'/'.$data[2];
+		//代理显示文件特殊处理
+		if($mapKey=='ajax/BlogUtil/showFile'){
+			$f='';
+			for($i=3;$i<$dataLength;$i++){
+				$f.= $data[$i];
+			}
+			$urlData->set('f',$f);
+			return ;
+		}
 		if(($dataLength>3)&&isset($this->urlMap[$mapKey])){
 			for($i=3;$i<$dataLength;$i++){
 				$urlData->set($this->urlMap[$mapKey][$i-3], $data[$i]);
@@ -90,6 +99,8 @@ class StaticUrlHandler implements UrlHandler {
 		$url='/'.$cname.'/'.$aname;
 		if(!empty($data))
 			$url.=('/'.implode('/',$data));
+		if($xmlSafe)
+			$url=str_replace('&', '&amp;', $url);
 		return $url;
 	}
 	

@@ -8,6 +8,8 @@ use think\Verify;
 use liuguang\mvc\DataMap;
 use liuguang\blog\model\User;
 use liuguang\blog\view\BlogRight;
+use liuguang\mvc\Application;
+use liuguang\mvc\FsException;
 
 /**
  * 博客的工具类控制器
@@ -99,10 +101,56 @@ class BlogUtil extends BaseController {
 		);
 		echo json_encode ( $result );
 	}
-	public function blogRightAction(){
+	public function blogRightAction() {
 		header ( 'Content-Type: application/json' );
-		$rightM=new BlogRight($this->getDb(),$this->getTablePre());
-		$result=array("success"=>true,"html"=>$rightM->getHtml());
+		$rightM = new BlogRight ( $this->getDb (), $this->getTablePre () );
+		$result = array (
+				"success" => true,
+				"html" => $rightM->getHtml () 
+		);
 		echo json_encode ( $result );
+	}
+	/**
+	 * 根据后缀判断对应的mime类型
+	 *
+	 * @param string $objectName
+	 *        	文件对象名
+	 * @return string
+	 */
+	private function getMimeType($objectName) {
+		$obj_type = strrchr ( $objectName, '.' );
+		$mimeType = 'application/octet-stream';
+		if ($obj_type !== false) {
+			$mimeArr = array (
+					'.png' => 'image/png',
+					'.jpg' => 'image/jpeg',
+					'.jpeg' => 'image/jpeg',
+					'.gif' => 'image/gif',
+					'.bmp' => 'image/bmp' 
+			);
+			if (array_key_exists ( $obj_type, $mimeArr )) {
+				$mimeType = $mimeArr [$obj_type];
+			}
+		}
+		return $mimeType;
+	}
+	// 代理显示文件
+	public function showFileAction() {
+		$fs = $this->getFs ();
+		$app = Application::getApp ();
+		if ($fs->canGetUrl ()) {
+			$appConfig = $app->getAppConfig ();
+			$app->callController ( $appConfig->get ( '404C' ), $appConfig->get ( 'defaultA' ) );
+			return;
+		}
+		$urlData=$app->getUrlHandler()->getUrlData();
+		$objectName = $urlData->get ( 'f', '' );
+		try {
+			$fData = $fs->read ( $objectName );
+			header ( 'Content-Type: ' . $this->getMimeType ( $objectName ) );
+			echo $fData;
+		} catch ( FsException $e ) {
+			$app->getErrHandler ()->handle ( 500, '文件读取出错'.$e->getMessage() );
+		}
 	}
 }
