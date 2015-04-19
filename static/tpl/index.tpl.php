@@ -8,6 +8,7 @@ if (! defined ( 'APP_PATH' ))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="keywords" content="<?php echo $tplData->get('blog_keywords'); ?>">
+<meta name="description" content="<?php echo $tplData->get('description'); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?php echo $tplData->get('title'); ?></title>
 <!-- Bootstrap -->
@@ -38,17 +39,19 @@ $(document).ready(function(){
 	<div id="main_div" class="container-fluid">
 		<div class="container">
 			<div id="blog_header" class="row">
-				<div id="touxiang" class="col-md-2"></div>
+				<div id="touxiang" class="col-md-2">
+					<img class="img-thumbnail" src="<?php echo $tplData->get('touxiang_img'); ?>" alt="头像"/>
+				</div>
 				<div class="col-md-10">
 					<div class="row">
 						<div class="col-md-5">
-							<h2 id="blogname">博客名称</h2>
+							<h2 id="blogname"><?php echo $tplData->get('blogname'); ?></h2>
 						</div>
 					</div>
 					<!-- /.row -->
 					<div class="row">
 						<div class="col-md-7">
-							<h3 id="description">博客说明文本</h3>
+							<h3 id="description"><?php echo $tplData->get('description'); ?></h3>
 						</div>
 					</div>
 					<!-- /.row -->

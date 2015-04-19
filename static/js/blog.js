@@ -224,13 +224,6 @@ function blogInit(nIndex) {
 	}
 	$("#admin_list").html(adminListHtml);
 	$("#admin_list a:lt(6)").bindPushState();
-	/* 其他内容替换 */
-	$("#touxiang").html(
-			"<img class=\"img-thumbnail\" src=\"" + blogInfo.touxiang_img
-					+ "\" width=\"150\" height=\"150\" title=\""
-					+ blogInfo.nickname + "\" alt=\"头像\"/>");
-	$("#blogname").html(blogInfo.blogname);
-	$("#description").html(blogInfo.description);
 	/* 更新登录状态 */
 	updateUserArea(blogInfo.is_login);
 	/* 登录界面代码生成 */
@@ -271,7 +264,7 @@ function blogInit(nIndex) {
 	</div>\
 	<div class=\"form-group\">\
 		<div class=\"col-md-offset-2 col-md-9\">\
-			<img id=\"rcode_img\" src=\"\" draggable=\"false\" alt=\"验证码\"\
+			<img id=\"rcode_img\" src=\""+getRcodeUrl()+"\" draggable=\"false\" alt=\"验证码\"\
 				title=\"点击刷新\" />\
 		</div>\
 	</div>";
@@ -288,7 +281,6 @@ function blogInit(nIndex) {
 	var reloadRcode = function() {
 		$("#rcode_img").attr("src", getRcodeUrl());
 	}
-	reloadRcode();
 	$("#rcode_img").click(reloadRcode);
 	$("#rcode_new").click(reloadRcode);
 

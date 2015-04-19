@@ -60,6 +60,10 @@ body{
 	color: <?php echo $tplData->get('nav_active_color'); ?>;
 	border-bottom: 4px solid <?php echo $tplData->get('nav_active_color'); ?>;
 }
+#touxiang img{
+	width:150px;
+	height:150px;
+}
 /*登录界面*/
 #user_area{
 	margin-top: 6px;
