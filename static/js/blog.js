@@ -133,8 +133,7 @@ function postLoginForm() {
 						var Days = 30, exp = new Date();
 						exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
 						document.cookie = "osid=" + data.osid + "; expires="
-								+ exp.toGMTString() + "; path="
-								+ blogInfo.blog_context;
+								+ exp.toGMTString() + "; path=/";
 						blogInfo.is_login = 1;
 						updateUserArea(1);
 						$('#login_div').modal('hide');
@@ -317,8 +316,7 @@ function logoutConfirm() {
 		// 删除cookie
 		var Days = 5, exp = new Date();
 		exp.setTime(exp.getTime() - Days * 24 * 60 * 60 * 1000);
-		document.cookie = "osid=123; expires=" + exp.toGMTString() + "; path="
-				+ blogInfo.blog_context;
+		document.cookie = "osid=123; expires=" + exp.toGMTString() + "; path=/";
 		location.href = blogInfo.logoutUrl;
 	}
 }
