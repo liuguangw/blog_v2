@@ -59,6 +59,8 @@ class TopicPage {
     <p id="topic_head_info">发表于:%s&nbsp;%s 浏览数:%s&nbsp; 所属分类:&nbsp; <a href="%s">%s</a></p>
     <hr/>
     %s
+	<hr/>
+	%s
   </div>
   <div id="tag_info" class="panel-footer">
     文章标签:%s
@@ -77,7 +79,42 @@ class TopicPage {
 		$typeUrl = $urlHandler->createUrl ( 'web/TocType', 'index', array (
 				't_id' => $tmp ['leibie_id'] 
 		) );
-		$html = sprintf ( $nodeTpl, $tmp ['t_title'], date ( 'Y-m-d H:i:s', $tmp ['post_time'] ), $last_update_info, $tmp ['view_num'], $typeUrl, $tmp ['t_name'], $tmp ['t_content'], $taglist );
+		$shareCode='<div class="bdsharebuttonbox">
+   <a href="javascript:void(0)" class="bds_more" data-cmd="more">分享到：</a>
+   <a href="javascript:void(0)" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+   <a href="javascript:void(0)" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+   <a href="javascript:void(0)" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+   <a href="javascript:void(0)" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+   <a href="javascript:void(0)" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧">百度贴吧</a>
+   <a href="javascript:void(0)" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+  </div> 
+<script type="text/javascript">
+window._bd_share_config = {
+  "common": {
+    "bdSnsKey": {},
+    "bdText": "",
+    "bdMini": "2",
+    "bdMiniList": false,
+    "bdPic": "",
+    "bdStyle": "0",
+    "bdSize": "16"
+  },
+  "share": {
+    "bdSize": 16
+  },
+  "image": {
+    "viewList": ["qzone", "tsina", "tqq", "weixin", "tieba", "renren"],
+    "viewText": "分享到：",
+    "viewSize": "16"
+  },
+  "selectShare": {
+    "bdContainerClass": null,
+    "bdSelectMiniList": ["qzone", "tsina", "tqq", "weixin", "tieba", "renren"]
+  }
+};
+with(document) 0[(getElementsByTagName("head")[0] || body).appendChild(createElement("script")).src = "http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=" + ~ ( - new Date() / 36e5)];
+</script>';
+		$html = sprintf ( $nodeTpl, $tmp ['t_title'], date ( 'Y-m-d H:i:s', $tmp ['post_time'] ), $last_update_info, $tmp ['view_num'], $typeUrl, $tmp ['t_name'], $tmp ['t_content'],$shareCode, $taglist );
 		$edit_topic_url = $urlHandler->createUrl ( 'web/BlogAdmin', 'editTopic', array (
 				't_id' => $t_id 
 		) );
