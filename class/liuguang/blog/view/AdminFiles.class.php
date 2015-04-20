@@ -63,7 +63,7 @@ class AdminFiles {
 		$html .= '<div class="row"><div class="col-sm-12"><p id="upload_info"></p></div></div>';
 		$html .= ('<link rel="stylesheet" type="text/css" href="' . $blog_context . '/static/uploadify/uploadify.css" />
         <script type="text/javascript">
-        if(blogInfo.load_js.uploadify==0){
+        if(!blogInfo.load_js.uploadify){
             loadJsFile("' . $blog_context . '/static/uploadify/jquery.uploadify.min.js",function(){
                 blogInfo.load_js.uploadify=1;
                 $("#blog_upload_f").uploadify({

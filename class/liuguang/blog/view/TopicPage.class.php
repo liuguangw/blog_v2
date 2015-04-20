@@ -191,7 +191,7 @@ else
     <script class="form-control-static" id="t_contents" type="text/plain">回复内容</script>
     <script type="text/javascript">
     var ue;
-    if(blogInfo.load_js.ueditor==0){
+    if(!blogInfo.load_js.ueditor){
         loadJsFile("' . $ue_path . 'ueditor.config.js",function(){
             loadJsFile("' . $ue_path . 'ueditor.all.min.js",function(){
                 blogInfo.load_js.ueditor=true;
