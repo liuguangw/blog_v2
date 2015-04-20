@@ -22,9 +22,14 @@ body{
 #blog_center a {
 	text-decoration:none;
 }
-#blog_bottom{
-	padding-top: 15px;
-	padding-bottom: 15px;
+#blog_footer{
+	border-top: 1px solid #F5F5F5;
+	color: #9a9a9a;
+	background-color: #f2f2f2;
+	height: 46px;
+	line-height: 46px;
+	font-size: 12px;
+	text-align:center;
 }
 .touming {
 	opacity: .8;
@@ -90,6 +95,12 @@ body{
 }
 .topic-node .panel-footer a:hover{
   color:#E63;
+ }
+ /*links*/
+ #blog_links a{
+	 font-size: 9pt;
+	 margin-right: 6px;
+	 color: #666;
  }
  /*返回顶部*/
  .go_top{

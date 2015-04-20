@@ -128,12 +128,12 @@ class AdminFiles {
                         "data" : postData,
                         "success" : function(data) {
                             if(data.success){
-                                alertModal("success",act_names+"操作成功",data.msg);
+                                alertModal("success",act_names[index]+"操作成功",data.msg);
                                 if(index==1)
                                     trNode.remove();
                             }
                             else
-                                alertModal("danger",act_names+"操作失败",data.msg);
+                                alertModal("danger",act_names[index]+"操作失败",data.msg);
                         },
                         "error" : function(jqXHR, textStatus, errorThrown) {
                             alertModal("danger","异步失败",errorThrown);

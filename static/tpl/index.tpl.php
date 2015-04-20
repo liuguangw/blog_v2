@@ -85,11 +85,17 @@ $(document).ready(function(){
 				<!-- 右侧  -->
 				<div id="blog_right" class="col-md-2"><?php echo $tplData->get('blog_right'); ?></div>
 			</div>
-			<div class="row"> 
-				<div id="blog_bottom" class="text-center col-md-12"><?php echo $tplData->get('blog_bottom'); ?></div>
+			<div class="row">
+			<!-- links -->
+				<div class="col-md-12">
+					<div class="panel panel-default">
+					  <div class="panel-heading">友情链接</div>
+					  <div id="blog_links" class="panel-body">
+					  <?php echo $tplData->get('links'); ?>
+					  </div>
+					</div>
+				</div>
 			</div>
-			<!-- go top -->
-			<div class="go_top"></div>
 			<!-- 博客登录界面 -->
 			<div id="login_div" class="modal fade" role="dialog"
 				aria-hidden="true">
@@ -101,5 +107,10 @@ $(document).ready(function(){
 			<!-- end 消息提示 -->
 		</div>
 	</div>
+	<div class="container-fluid">
+		<div class="row" id="blog_footer"><?php echo $tplData->get('blog_bottom'); ?></div>
+	</div>
+	<!-- go top -->
+	<div class="go_top"></div>
 </body>
 </html>

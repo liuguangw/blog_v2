@@ -200,6 +200,10 @@ function blogInit(nIndex) {
 		"action" : "files",
 		"type" : 1
 	}, {
+		"name" : "友链管理",
+		"action" : "links",
+		"type" : 1
+	}, {
 		"name" : "发表文章",
 		"action" : "postTopic",
 		"type" : 1
@@ -232,7 +236,7 @@ function blogInit(nIndex) {
 		}
 	}
 	$("#admin_list").html(adminListHtml);
-	$("#admin_list a:lt(6)").bindPushState();
+	$("#admin_list a:lt(7)").bindPushState();
 	/* 更新登录状态 */
 	updateUserArea(blogInfo.is_login);
 	/* 登录界面代码生成 */

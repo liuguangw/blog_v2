@@ -268,6 +268,18 @@ class Install extends BaseController {
 				PRIMARY KEY (t_key)
 		)' ) === false)
 			return false;
+			//友情链接表
+		if ($db->exec ( 'DROP TABLE IF EXISTS ' . $tablePre . 'links' ) === false)
+			return false;
+		if ($db->exec ( 'CREATE TABLE ' . $tablePre . 'links(
+				t_id int UNSIGNED NOT NULL AUTO_INCREMENT,
+				t_name varchar(30) NOT NULL,
+				t_url varchar(90) NOT NULL,
+				t_color varchar(10) NOT NULL,
+				PRIMARY KEY (t_id),
+				UNIQUE (t_url)
+		)' ) === false)
+			return false;
 			// 初始数据导入。。。
 		$sql = 'INSERT INTO %sconfig(t_key,t_value) VALUES (\'username\',\'%s\'),(\'pass\',\'%s\'),(\'blogname\',\'%s\'),(\'nickname\',\'%s\'),(\'install_time\',\'%d\')';
 		if ($db->exec ( sprintf ( $sql, $tablePre, $_POST ['username'], $userModel->encodePass ( $_POST ['username'], $_POST ['pass1'] ), addslashes ( $_POST ['blogname'] ), addslashes ( $_POST ['nickname'] ), time () ) ) === false)
@@ -290,5 +302,9 @@ class Install extends BaseController {
 		if ($db->exec ( sprintf ( $sql, $tablePre, '你好，世界', $t_content, $t_prev_text, $postTime, $postYm ) ) === false)
 			return false;
 		return true;
+		//导入友情链接
+		$sql = 'INSERT INTO %slinks(t_name,t_url,t_color) VALUES (\'流光博客\',\'%s\',\'##A00\')';
+		if ($db->exec ( sprintf ( $sql, $tablePre,'http://liusapp.vipsinaapp.com' ) ) === false)
+			return false;
 	}
 }

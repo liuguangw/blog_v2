@@ -12,6 +12,7 @@ use liuguang\blog\view\AdminTags;
 use liuguang\blog\view\AdminFiles;
 use liuguang\blog\view\AdminEnv;
 use liuguang\blog\model\User;
+use liuguang\blog\view\AdminLinks;
 
 /**
  * 后台
@@ -96,6 +97,22 @@ class BlogAdmin extends Index {
 		$app = Application::getApp ();
 		$urlData = $app->getUrlHandler ()->getUrlData ();
 		$vModel = new AdminFiles ( $this->getDb (), $this->getTablePre (), $this->getFs () );
+		$page = ( int ) $urlData->get ( 'page', 1 );
+		$tplData->set ( 'title', $vModel->getTitle ( $page ) );
+		$tplData->set ( 'blog_center', $vModel->getHtml ( $page ) );
+		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
+		$tplData->set ( 'blog_right', $rightM->getHtml () );
+		$tplData->set ( 'nIndex', 1 );
+		$tpl->display ();
+	}
+	public function linksAction() {
+		$this->checkInstall ();
+		$this->checkAdmin ();
+		$tpl = $this->getMainTpl ();
+		$tplData = $tpl->getTplData ();
+		$app = Application::getApp ();
+		$urlData = $app->getUrlHandler ()->getUrlData ();
+		$vModel = new AdminLinks( $this->getDb (), $this->getTablePre ());
 		$page = ( int ) $urlData->get ( 'page', 1 );
 		$tplData->set ( 'title', $vModel->getTitle ( $page ) );
 		$tplData->set ( 'blog_center', $vModel->getHtml ( $page ) );

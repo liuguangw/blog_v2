@@ -62,6 +62,9 @@ $config ['urlMap'] = array (
 		'web/BlogAdmin/files' => array (
 				'page' 
 		),
+		'web/BlogAdmin/links' => array (
+				'page' 
+		),
 		'web/Topic/index' => array (
 				't_id' 
 		),

@@ -23,6 +23,20 @@ class Index extends BaseController {
 		while ( $tmp = $stm->fetch () ) {
 			$result [$tmp ['t_key']] = $tmp ['t_value'];
 		}
+		//友情链接查询
+		$links='暂无友情链接';
+		$stm=$db->query('SELECT COUNT(*) AS link_num FROM '.$tablePre.'links');
+		$rst=$stm->fetch();
+		if($rst['link_num']!=0){
+			$links='';
+			$stm=$db->query('SELECT * FROM '.$tablePre.'links ORDER BY t_id ASC');
+			while($tmp=$stm->fetch()){
+				$links.=('<a href="'.$tmp['t_url'].'"');
+				if($tmp['t_color']!='')
+					$links.=(' style="color:'.$tmp['t_color'].'"');
+				$links.=('>'.$tmp['t_name'].'</a>');
+			}
+		}
 		if ($result ['touxiang_img'] == '')
 			$result ['touxiang_img'] = $tplData->get ( 'blog_context' ) . '/static/img/touxiang.jpg';
 		$blogInfo = array (
@@ -60,6 +74,7 @@ class Index extends BaseController {
 		$tplData->set ( 'blogname', $result ['blogname'] );
 		$tplData->set ( 'touxiang_img', $result ['touxiang_img'] );
 		$tplData->set ( 'blog_bottom', $result ['blog_bottom'] );
+		$tplData->set ( 'links', $links );
 		$tplData->set ( 'blogCsspath', $urlHandler->createUrl ( 'ajax/BlogUtil', 'css', array () ) );
 		$tplData->set ( 'blogIndexUrl', $urlHandler->createUrl ( 'Index', 'index', array () ) );
 		$tplData->set ( 'blogListUrl', $urlHandler->createUrl ( 'web/BlogList', 'index', array (
