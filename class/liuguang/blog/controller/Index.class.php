@@ -31,10 +31,10 @@ class Index extends BaseController {
 			$links='';
 			$stm=$db->query('SELECT * FROM '.$tablePre.'links ORDER BY t_id ASC');
 			while($tmp=$stm->fetch()){
-				$links.=('<a href="'.$tmp['t_url'].'"');
+				$links.=('<a href="'.$tmp['t_url'].'"  target="_blank"');
 				if($tmp['t_color']!='')
 					$links.=(' style="color:'.$tmp['t_color'].'"');
-				$links.=('>'.$tmp['t_name'].'</a>');
+				$links.=('>'.$tmp['t_name'].'</a>'."\n");
 			}
 		}
 		if ($result ['touxiang_img'] == '')

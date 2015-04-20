@@ -72,8 +72,6 @@ $(document).ready(function(){
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 								博主登录
 							</button>
-							<ul id="admin_list" class="dropdown-menu" role="menu">
-							</ul>
 						</div>
 					</div>
 					<!-- /.row -->
@@ -95,16 +93,7 @@ $(document).ready(function(){
 					  </div>
 					</div>
 				</div>
-			</div>
-			<!-- 博客登录界面 -->
-			<div id="login_div" class="modal fade" role="dialog"
-				aria-hidden="true">
-			</div>
-			<!-- end 登录界面 -->
-			<!-- 消息提示模态框 -->
-			<div id="msg_div" class="modal fade" role="dialog" aria-hidden="true">
-			</div>
-			<!-- end 消息提示 -->
+			</div><!-- end row -->
 		</div>
 	</div>
 	<div class="container-fluid">

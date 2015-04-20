@@ -22,8 +22,8 @@ class Topic extends Index {
 		$urlData=$app->getUrlHandler()->getUrlData();
 		$t_id=(int)$urlData->get('t_id',1);
 		$vModel = new CenterView ( $this->getDb (), $this->getTablePre (),$t_id);
-		$tplData->set ( 'title', $vModel->getTitle () );
 		$tplData->set ( 'blog_center', $vModel->getHtml ( ) );
+		$tplData->set ( 'title', $vModel->getTitle () );
 		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
 		$tplData->set ( 'blog_right', $rightM->getHtml () );
 		$tplData->set ( 'nIndex', 1 );

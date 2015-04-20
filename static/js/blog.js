@@ -217,7 +217,7 @@ function blogInit(nIndex) {
 		"name" : "注销登录",
 		"action" : "javascript:logoutConfirm()",
 		"type" : 2
-	}, ], adminListHtml = "", i;
+	}, ], adminListHtml = "<ul id=\"admin_list\" class=\"dropdown-menu\" role=\"menu\">", i;
 	for (i = 0; i < adminUrlarr.length; i++) {
 		if (adminUrlarr[i].type == 0)
 			adminListHtml += "<li role=\"presentation\" class=\"divider\"></li>";
@@ -235,7 +235,8 @@ function blogInit(nIndex) {
 			adminListHtml += "</li>";
 		}
 	}
-	$("#admin_list").html(adminListHtml);
+	adminListHtml+="</ul>";
+	$("#user_area").after(adminListHtml);
 	$("#admin_list a:lt(7)").bindPushState();
 	/* 更新登录状态 */
 	updateUserArea(blogInfo.is_login);
@@ -282,14 +283,16 @@ function blogInit(nIndex) {
 		</div>\
 	</div>";
 	loginDivBody += "</form>";
-	$("#login_div").html(
+	$("#main_div>div").append("<!-- 博客登录界面 -->\
+			<div id=\"login_div\" class=\"modal fade\" role=\"dialog\" aria-hidden=\"true\">"+
 			createModalDiv(blogInfo.blogname + "-登录", loginDivBody,
-					loginDivFooter));
+					loginDivFooter)+"</div>");
 	/* 消息提示模态框 */
-	$("#msg_div").html(
+	$("#main_div>div").append("<!-- 消息提示模态框 -->\
+			<div id=\"msg_div\" class=\"modal fade\" role=\"dialog\" aria-hidden=\"true\">"+
 			createModalDiv("Modal title",
 					"<div class=\"alert alert-danger\" role=\"alert\"></div>",
-					""));
+					"")+"</div>");
 	/* 登录界面验证码刷新 */
 	var reloadRcode = function() {
 		$("#rcode_img").attr("src", getRcodeUrl());
