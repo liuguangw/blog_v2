@@ -91,3 +91,18 @@ body{
 .topic-node .panel-footer a:hover{
   color:#E63;
  }
+ /*返回顶部*/
+ .go_top{
+ 	position:fixed;
+ 	bottom:15px;
+ 	right:15px;
+	width:65px;
+	height:65px;
+	cursor: pointer;
+	background-image: url(<?php echo $tplData->get('blog_context'); ?>/static/img/to_top.png);
+	background-position:0 0;
+	display:none;
+ }
+ .go_top:hover{
+ 	background-position:65px 0;
+ }

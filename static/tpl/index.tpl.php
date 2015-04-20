@@ -88,6 +88,8 @@ $(document).ready(function(){
 			<div class="row"> 
 				<div id="blog_bottom" class="text-center col-md-12"><?php echo $tplData->get('blog_bottom'); ?></div>
 			</div>
+			<!-- go top -->
+			<div class="go_top"></div>
 			<!-- 博客登录界面 -->
 			<div id="login_div" class="modal fade" role="dialog"
 				aria-hidden="true">

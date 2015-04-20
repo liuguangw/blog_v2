@@ -258,6 +258,7 @@ else
                                 "topic_id":' . $t_id . '
                             },
                             "success" : function(data) {
+							ue.setContent("");
                             $("#reply_div").html("<div class=\"panel-heading\">回复列表</div>"+data.msg);
 							SyntaxHighlighter.highlight();
                             },

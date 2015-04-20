@@ -160,6 +160,16 @@ function blogInit(nIndex) {
 		alertMsg("danger", "数据库连接失败");
 	// 导航条
 	$("#main_navbar a:eq(" + nIndex + ")").addClass("active");
+	//返回顶部按钮
+	$(window).scroll(function(){
+		if((window.scrollY>0)&&($(".go_top").css("display")=="none"))
+			$(".go_top").fadeIn(400);
+		else if((window.scrollY==0)&&($(".go_top").css("display")!="none"))
+			$(".go_top").stop().fadeOut(400);
+	});
+	$(".go_top").click(function(){
+		$("html,body").animate({scrollTop:"0px"},window.scrollY);
+	})
 	// 判断是否支持 pushState
 	if ("pushState" in history) {
 		// 浏览器前进、后退
