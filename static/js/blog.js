@@ -168,7 +168,7 @@ function blogInit(nIndex) {
 			$(".go_top").stop().fadeOut(400);
 	});
 	$(".go_top").click(function(){
-		$("html,body").animate({scrollTop:"0px"},window.scrollY);
+		$("html,body").animate({scrollTop:"0px"},window.scrollY/3);
 	})
 	// 判断是否支持 pushState
 	if ("pushState" in history) {
