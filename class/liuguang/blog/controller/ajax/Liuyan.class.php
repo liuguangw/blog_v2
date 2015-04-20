@@ -6,6 +6,7 @@ use liuguang\mvc\DataMap;
 use liuguang\blog\view\Liuyan as BlogLiuyan;
 use liuguang\mvc\Application;
 use liuguang\blog\model\User;
+use liuguang\blog\controller\BaseController;
 
 /**
  * 处理用户发表的留言,以及留言的更新获取
@@ -13,7 +14,7 @@ use liuguang\blog\model\User;
  * @author liuguang
  *        
  */
-class Liuyan extends BaseAdmin {
+class Liuyan extends BaseController {
 	public function doReplyAction() {
 		header ( 'Content-Type: application/json' );
 		$ajaxReturn = array (

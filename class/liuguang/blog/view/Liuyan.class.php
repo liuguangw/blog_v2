@@ -158,6 +158,7 @@ class Liuyan {
                                 "page":' . $page . '
                             },
                             "success" : function(data) {
+							ue.setContent("");
                             $("#reply_div").html("<div class=\"panel-heading\">留言列表第' . $page . '页</div>"+data.msg);
 							SyntaxHighlighter.highlight();
                             },
