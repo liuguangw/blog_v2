@@ -31,7 +31,7 @@ class Index extends BaseController {
 						'ueditor' => false,
 						'uploadify' => false,
 						'shCore' => false,
-						'baiduShare'=>false
+						'baiduShare' => false 
 				) 
 		);
 		if (! isset ( $_COOKIE ['osid'] ))
@@ -88,5 +88,51 @@ class Index extends BaseController {
 		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
 		$tplData->set ( 'blog_right', $rightM->getHtml () );
 		$tpl->display ();
+	}
+	public function sitemapAction() {
+		$this->checkInstall ();
+		$tpl = new Template ( 'sitemap', 'application/xml' );
+		$tplData = $tpl->getTplData ();
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$webHost = 'http://'.$_SERVER ['HTTP_HOST'];
+		$app = Application::getApp ();
+		$appConfig = $app->getAppConfig ();
+		date_default_timezone_set ( $appConfig->get ( 'timeZone' ) );
+		$urlList = '';
+		$stm = $db->query ( 'SELECT COUNT(*) AS s_num FROM ' . $tablePre . 'topic' );
+		$rst = $stm->fetch ();
+		$urlHandler = $app->getUrlHandler ();
+		if ($rst ['s_num'] != 0) {
+			$addIndex = false;
+			$stm = $db->query ( 'SELECT t_id,post_time,last_update FROM ' . $tablePre . 'topic ORDER BY t_id DESC LIMIT 50' );
+			while ( $tmp = $stm->fetch () ) {
+				$lastmod = $tmp ['last_update'];
+				if ($lastmod == 0)
+					$lastmod = $tmp ['post_time'];
+				if (! $addIndex) {
+					$addIndex = true;
+					$urlList = $this->getUrlNode ( $webHost . '/', $lastmod, 'daily', '1.0' ) . "\n";
+				}
+				$loc = $webHost . $urlHandler->createUrl ( 'web/Topic', 'index', array (
+						't_id' => $tmp ['t_id'] 
+				) );
+				$urlList .= ($this->getUrlNode ( $loc, $lastmod, 'daily', '0.7' ) . "\n");
+			}
+		} else {
+			$lastmod = time () - (2 * 24 * 3600);
+			$urlList = $this->getUrlNode ( $webHost . '/', $lastmod, 'daily', '1.0' );
+		}
+		$tplData->set ( 'urlList', $urlList );
+		$tpl->display ();
+	}
+	private function getUrlNode($loc, $lastmod, $changefreq, $priority) {
+		$urlNode = '<url>
+	<loc>' . $loc . '</loc>
+	<lastmod>' . date ( 'c', $lastmod ) . '</lastmod>
+	<changefreq>' . $changefreq . '</changefreq>
+	<priority>' . $priority . '</priority>
+</url>';
+		return $urlNode;
 	}
 }

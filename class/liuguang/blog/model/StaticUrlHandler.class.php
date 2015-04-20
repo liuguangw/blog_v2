@@ -51,6 +51,11 @@ class StaticUrlHandler implements UrlHandler {
 			$urlData->set($this->aKey, 'index');
 			return $urlData;
 		}
+		elseif($url=='/sitemap.xml'){
+			$urlData->set($this->cKey, 'Index');
+			$urlData->set($this->aKey, 'sitemap');
+			return $urlData;
+		}
 		$url=trim($url," \t\n\r\0\x0B/");
 		$data=explode('/', $url);
 		$dataLength=count($data);
