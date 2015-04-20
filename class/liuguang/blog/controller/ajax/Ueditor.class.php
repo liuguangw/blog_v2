@@ -5,6 +5,7 @@ namespace liuguang\blog\controller\ajax;
 use liuguang\blog\controller\BaseController;
 use liuguang\mvc\Application;
 use liuguang\mvc\FsException;
+use liuguang\blog\model\User;
 
 /**
  *
@@ -133,21 +134,6 @@ class Ueditor extends BaseController {
 		$ajaxReturn ['fileAllowFiles'] = $this->fileAllowFiles;
 		echo json_encode ( $ajaxReturn );
 	}
-	/**
-	 * 判断用户是否为博主
-	 *
-	 * @return boolean
-	 */
-	private function isAdmin() {
-		if (! isset ( $_COOKIE ['osid'] ))
-			return false;
-		$stm = $this->getDb ()->query ( 'SELECT * FROM ' . $this->getTablePre () . 'config WHERE t_key=\'pass\'' );
-		$rst = $stm->fetch ();
-		if ($_COOKIE ['osid'] != $rst ['t_value'])
-			return false;
-		else
-			return true;
-	}
 	public function uploadimageAction() {
 		$ajaxReturn = array (
 				'state' => '',
@@ -157,8 +143,11 @@ class Ueditor extends BaseController {
 				'type' => '',
 				'size' => '' 
 		);
-		if (! $this->isAdmin ()) {
-			$ajaxReturn ['state'] = '只有博主才能进行此操作';
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
+			$ajaxReturn ['state'] = '只有博主才能上传图片';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
@@ -217,8 +206,11 @@ class Ueditor extends BaseController {
 				'type' => '',
 				'size' => '' 
 		);
-		if (! $this->isAdmin ()) {
-			$ajaxReturn ['state'] = '只有博主才能进行此操作';
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
+			$ajaxReturn ['state'] = '只有博主才能进行涂鸦';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
@@ -275,8 +267,11 @@ class Ueditor extends BaseController {
 				'type' => '',
 				'size' => '' 
 		);
-		if (! $this->isAdmin ()) {
-			$ajaxReturn ['state'] = '只有博主才能进行此操作';
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
+			$ajaxReturn ['state'] = '只有博主才能上传文件';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}

@@ -4,6 +4,7 @@ namespace liuguang\blog\controller\ajax;
 
 use liuguang\mvc\DataMap;
 use liuguang\blog\model\User;
+use liuguang\blog\controller\BaseController;
 
 /**
  * 用于处理博客设置的提交
@@ -11,7 +12,7 @@ use liuguang\blog\model\User;
  * @author liuguang
  *        
  */
-class DoAdminSets extends BaseAdmin {
+class DoAdminSets extends BaseController {
 	/**
 	 * 博客基础设置
 	 *
@@ -22,7 +23,10 @@ class DoAdminSets extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -41,21 +45,18 @@ class DoAdminSets extends BaseAdmin {
 				'abouts',
 				'blog_bottom'
 		);
-		$userM = new User ();
-		if (! $userM->checkNickname ( $postData->get ( 'nickname', '' ) )) {
+		if (! $user->checkNickname ( $postData->get ( 'nickname', '' ) )) {
 			$ajaxReturn ['success'] = false;
-			$ajaxReturn ['msg'] = $userM->getErrMsg ();
+			$ajaxReturn ['msg'] = $user->getErrMsg ();
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
-		if (! $userM->checkBlogname ( $postData->get ( 'blogname', '' ) )) {
+		if (! $user->checkBlogname ( $postData->get ( 'blogname', '' ) )) {
 			$ajaxReturn ['success'] = false;
-			$ajaxReturn ['msg'] = $userM->getErrMsg ();
+			$ajaxReturn ['msg'] = $user->getErrMsg ();
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		foreach ( $inputs as $t_key ) {
 			$sql = 'UPDATE ' . $tablePre . 'config SET t_value=\'' . addslashes ( $postData->get ( $t_key ) ) . '\' WHERE t_key=\'' . $t_key . '\'';
 			if ($db->exec ( $sql ) === false) {
@@ -77,7 +78,10 @@ class DoAdminSets extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -89,8 +93,6 @@ class DoAdminSets extends BaseAdmin {
 				'top_img',
 				'touxiang_img' 
 		);
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		foreach ( $inputs as $t_key ) {
 			$sql = 'UPDATE ' . $tablePre . 'config SET t_value=\'' . addslashes ( $postData->get ( $t_key ) ) . '\' WHERE t_key=\'' . $t_key . '\'';
 			if ($db->exec ( $sql ) === false) {
@@ -112,7 +114,10 @@ class DoAdminSets extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -124,8 +129,6 @@ class DoAdminSets extends BaseAdmin {
 				'allow_liuyan',
 				'allow_reply' 
 		);
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		foreach ( $inputs as $t_key ) {
 			$t_value = ( int ) $postData->get ( $t_key );
 			if (($t_value != 0) && ($t_value != 1)) {
@@ -155,7 +158,10 @@ class DoAdminSets extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -166,16 +172,15 @@ class DoAdminSets extends BaseAdmin {
 		$pass = $postData->get ( 'pass', '' );
 		$pass1 = $postData->get ( 'pass1', '' );
 		$pass2 = $postData->get ( 'pass2', '' );
-		$userM = new User ();
-		if (! $userM->checkUsername ( $username )) {
+		if (! $user->checkUsername ( $username )) {
 			$ajaxReturn ['success'] = false;
-			$ajaxReturn ['msg'] = $userM->getErrMsg ();
+			$ajaxReturn ['msg'] = $user->getErrMsg ();
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
-		if (! $userM->checkPass ( $pass1 )) {
+		if (! $user->checkPass ( $pass1 )) {
 			$ajaxReturn ['success'] = false;
-			$ajaxReturn ['msg'] = $userM->getErrMsg ();
+			$ajaxReturn ['msg'] = $user->getErrMsg ();
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
@@ -187,20 +192,18 @@ class DoAdminSets extends BaseAdmin {
 		}
 		// 验证原始密码
 		$data = array ();
-		$stm = $this->getDb ()->query ( 'SELECT * FROM ' . $this->getTablePre () . 'config WHERE t_key IN(\'pass\',\'username\')' );
+		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key IN(\'pass\',\'username\')' );
 		while ( $tmp = $stm->fetch () ) {
 			$data [$tmp ['t_key']] = $tmp ['t_value'];
 		}
 		$stm = null;
-		if ($userM->encodePass ( $data ['username'], $pass ) != $data ['pass']) {
+		if ($user->encodePass ( $data ['username'], $pass ) != $data ['pass']) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '原始密码不正确';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
-		$newPass = $userM->encodePass ( $username, $pass1 );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
+		$newPass = $user->encodePass ( $username, $pass1 );
 		$sqls = array ();
 		$sqls [0] = 'UPDATE ' . $tablePre . 'config SET t_value=\'' . $username . '\' WHERE t_key=\'username\'';
 		$sqls [1] = 'UPDATE ' . $tablePre . 'config SET t_value=\'' . $newPass . '\' WHERE t_key=\'pass\'';

@@ -4,6 +4,8 @@ namespace liuguang\blog\controller\ajax;
 
 use liuguang\mvc\DataMap;
 use liuguang\mvc\Application;
+use liuguang\blog\controller\BaseController;
+use liuguang\blog\model\User;
 
 /**
  * 用于管理文章
@@ -11,7 +13,7 @@ use liuguang\mvc\Application;
  * @author liuguang
  *        
  */
-class AdminTopic extends BaseAdmin {
+class AdminTopic extends BaseController {
 	/**
 	 * 处理博主发表的文章
 	 *
@@ -22,7 +24,10 @@ class AdminTopic extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -37,8 +42,6 @@ class AdminTopic extends BaseAdmin {
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		$posts_type = ( int ) $postData->get ( 'posts_type', 0 );
 		$stm = $db->query ( 'SELECT COUNT(*) AS s_num FROM ' . $tablePre . 'leibie WHERE t_id=' . $posts_type );
 		$rst = $stm->fetch ();
@@ -121,15 +124,16 @@ class AdminTopic extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$postData = new DataMap ( $_POST );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		$t_id = ( int ) $postData->get ( 't_id', 0 );
 		// 判断文章id是否存在
 		$sql = 'SELECT COUNT(*) AS t_num FROM ' . $tablePre . 'topic WHERE t_id=' . $t_id;
@@ -170,15 +174,16 @@ class AdminTopic extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$postData = new DataMap ( $_POST );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		$t_id = ( int ) $postData->get ( 't_id', 0 );
 		// 判断文章id是否存在
 		$sql = 'SELECT COUNT(*) AS t_num FROM ' . $tablePre . 'topic WHERE t_id=' . $t_id;
@@ -223,15 +228,16 @@ class AdminTopic extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$postData = new DataMap ( $_POST );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		$t_id = ( int ) $postData->get ( 't_id', 0 );
 		// 判断文章id是否存在
 		$sql = 'SELECT COUNT(*) AS t_num FROM ' . $tablePre . 'topic WHERE t_id=' . $t_id;
@@ -276,15 +282,16 @@ class AdminTopic extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$postData = new DataMap ( $_POST );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		$t_id = ( int ) $postData->get ( 't_id', 0 );
 		// 判断文章id是否存在
 		$sql = 'SELECT COUNT(*) AS t_num FROM ' . $tablePre . 'topic WHERE t_id=' . $t_id;

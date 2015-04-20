@@ -20,13 +20,15 @@ use liuguang\blog\view\TocType;
 use liuguang\blog\view\TocArch;
 use liuguang\blog\view\TagList;
 use liuguang\blog\view\EditTopic;
+use liuguang\blog\model\User;
+use liuguang\blog\controller\BaseController;
 /**
  * 处理pushState提交过来的URL
  *
  * @author liuguang
  *        
  */
-class PushUrl extends BaseAdmin{
+class PushUrl extends BaseController{
 	public function indexAction(){
 		$postData=new DataMap($_POST);
 		$app=Application::getApp();
@@ -41,11 +43,15 @@ class PushUrl extends BaseAdmin{
 		$aname=$urlData->get($aKey,$defaultA);
 		$url_key=$cname.'/'.$aname;
 		header ( 'Content-Type: application/json' );
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
 		$result=array();
 		$admin_str='web/BlogAdmin/';
 		$admin_str_length=strlen($admin_str);
 		if(strlen($url_key)>$admin_str_length){
-			if((substr($url_key, 0,$admin_str_length)==$admin_str)&&(!$this->isAdmin())){
+			$user=new User();
+			$isAdmin=$user->checkAdmin($db, $tablePre);
+			if((substr($url_key, 0,$admin_str_length)==$admin_str)&&(!$isAdmin)){
 				//需要验证权限
 				$result['title']='无权访问';
 				$result['blog_center']='<div class="alert alert-danger" role="alert">只有博主有权限访问当前页面</div>';

@@ -11,6 +11,7 @@ use liuguang\blog\view\EditTopic;
 use liuguang\blog\view\AdminTags;
 use liuguang\blog\view\AdminFiles;
 use liuguang\blog\view\AdminEnv;
+use liuguang\blog\model\User;
 
 /**
  * 后台
@@ -21,7 +22,7 @@ use liuguang\blog\view\AdminEnv;
 class BlogAdmin extends Index {
 	public function setsAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
 		$vModel = new AdminSets ( $this->getDb (), $this->getTablePre () );
@@ -34,7 +35,7 @@ class BlogAdmin extends Index {
 	}
 	public function postTopicAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
 		$vModel = new PostTopic ( $this->getDb (), $this->getTablePre () );
@@ -47,7 +48,7 @@ class BlogAdmin extends Index {
 	}
 	public function editTopicAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
 		$app = Application::getApp ();
@@ -63,10 +64,10 @@ class BlogAdmin extends Index {
 	}
 	public function typesAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
-		$vModel = new AdminTags( $this->getDb (), $this->getTablePre () ,false);
+		$vModel = new AdminTags ( $this->getDb (), $this->getTablePre (), false );
 		$tplData->set ( 'title', $vModel->getTitle () );
 		$tplData->set ( 'blog_center', $vModel->getHtml () );
 		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
@@ -76,10 +77,10 @@ class BlogAdmin extends Index {
 	}
 	public function tagsAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
-		$vModel = new AdminTags( $this->getDb (), $this->getTablePre () ,true);
+		$vModel = new AdminTags ( $this->getDb (), $this->getTablePre (), true );
 		$tplData->set ( 'title', $vModel->getTitle () );
 		$tplData->set ( 'blog_center', $vModel->getHtml () );
 		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
@@ -89,12 +90,12 @@ class BlogAdmin extends Index {
 	}
 	public function filesAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
 		$app = Application::getApp ();
 		$urlData = $app->getUrlHandler ()->getUrlData ();
-		$vModel = new AdminFiles( $this->getDb (), $this->getTablePre (), $this->getFs() );
+		$vModel = new AdminFiles ( $this->getDb (), $this->getTablePre (), $this->getFs () );
 		$page = ( int ) $urlData->get ( 'page', 1 );
 		$tplData->set ( 'title', $vModel->getTitle ( $page ) );
 		$tplData->set ( 'blog_center', $vModel->getHtml ( $page ) );
@@ -105,41 +106,31 @@ class BlogAdmin extends Index {
 	}
 	public function envAction() {
 		$this->checkInstall ();
-		$this->checkAdmin();
+		$this->checkAdmin ();
 		$tpl = $this->getMainTpl ();
 		$tplData = $tpl->getTplData ();
-		$vModel = new AdminEnv( $this->getDb (), $this->getTablePre (), $this->getFs() );
-		$tplData->set ( 'title', $vModel->getTitle (  ) );
-		$tplData->set ( 'blog_center', $vModel->getHtml ( ) );
+		$vModel = new AdminEnv ( $this->getDb (), $this->getTablePre (), $this->getFs () );
+		$tplData->set ( 'title', $vModel->getTitle () );
+		$tplData->set ( 'blog_center', $vModel->getHtml () );
 		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
 		$tplData->set ( 'blog_right', $rightM->getHtml () );
 		$tplData->set ( 'nIndex', 1 );
 		$tpl->display ();
 	}
-	private function isAdmin($osid = '') {
-		if ($osid == '') {
-			if (! isset ( $_COOKIE ['osid'] ))
-				return false;
-			$osid=$_COOKIE ['osid'];
-		}
-		$stm = $this->getDb ()->query ( 'SELECT * FROM ' . $this->getTablePre () . 'config WHERE t_key=\'pass\'' );
-		$rst = $stm->fetch ();
-		if ($osid != $rst ['t_value'])
-			return false;
-		else
-			return true;
-	}
-	private function checkAdmin(){
-		if(!$this->isAdmin()){
-		$tpl = $this->getMainTpl ();
-		$tplData = $tpl->getTplData ();
-		$tplData->set ( 'title', '无权访问' );
-		$tplData->set ( 'blog_center', '<div class="alert alert-danger" role="alert">只有博主有权限访问当前页面</div>' );
-		$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
-		$tplData->set ( 'blog_right', $rightM->getHtml () );
-		$tplData->set ( 'nIndex', 1 );
-		$tpl->display ();
-		exit();
+	private function checkAdmin() {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user = new User ();
+		if (! $user->checkAdmin ( $db, $tablePre )) {
+			$tpl = $this->getMainTpl ();
+			$tplData = $tpl->getTplData ();
+			$tplData->set ( 'title', '无权访问' );
+			$tplData->set ( 'blog_center', '<div class="alert alert-danger" role="alert">只有博主有权限访问当前页面</div>' );
+			$rightM = new RightView ( $this->getDb (), $this->getTablePre () );
+			$tplData->set ( 'blog_right', $rightM->getHtml () );
+			$tplData->set ( 'nIndex', 1 );
+			$tpl->display ();
+			exit ();
 		}
 	}
 }

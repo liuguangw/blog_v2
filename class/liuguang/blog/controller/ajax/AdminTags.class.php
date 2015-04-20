@@ -3,6 +3,8 @@
 namespace liuguang\blog\controller\ajax;
 
 use liuguang\mvc\DataMap;
+use liuguang\blog\model\User;
+use liuguang\blog\controller\BaseController;
 
 /**
  * 管理标签和分类
@@ -10,7 +12,7 @@ use liuguang\mvc\DataMap;
  * @author liuguang
  *        
  */
-class AdminTags extends BaseAdmin {
+class AdminTags extends BaseController {
 	/**
 	 * 处理标签或者分类的修改
 	 *
@@ -21,7 +23,10 @@ class AdminTags extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -37,10 +42,10 @@ class AdminTags extends BaseAdmin {
 		}
 		if ($tagType == 1) {
 			$t_str = '标签';
-			$tableName = $this->getTablePre () . 'tag';
+			$tableName = $tablePre . 'tag';
 		} else {
 			$t_str = '分类';
-			$tableName = $this->getTablePre () . 'leibie';
+			$tableName = $tablePre . 'leibie';
 		}
 		$tagId = ( int ) $postData->get ( 't_id', 0 );
 		if (! $this->tagIdExists ( $tagId, $tagType )) {
@@ -68,7 +73,7 @@ class AdminTags extends BaseAdmin {
 			return;
 		}
 		$sql = 'UPDATE ' . $tableName . ' SET t_name=\'' . addslashes ( $tagName ) . '\' WHERE t_id=' . $tagId;
-		if ($this->getDb ()->exec ( $sql ) === false) {
+		if ($db->exec ( $sql ) === false) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '更新' . $t_str . '名称时,执行SQL语句失败';
 			echo json_encode ( $ajaxReturn );
@@ -86,7 +91,10 @@ class AdminTags extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -102,10 +110,10 @@ class AdminTags extends BaseAdmin {
 		}
 		if ($tagType == 1) {
 			$t_str = '标签';
-			$tableName = $this->getTablePre () . 'tag';
+			$tableName = $tablePre . 'tag';
 		} else {
 			$t_str = '分类';
-			$tableName = $this->getTablePre () . 'leibie';
+			$tableName = $tablePre . 'leibie';
 		}
 		$tagName = $postData->get ( 't_name', '' );
 		$tagLength = mb_strlen ( $tagName, 'UTF-8' );
@@ -126,7 +134,7 @@ class AdminTags extends BaseAdmin {
 			return;
 		}
 		$sql = 'INSERT INTO ' . $tableName . '(t_name,create_time) VALUES (\'' . addslashes ( $tagName ) . '\',' . time () . ')';
-		if ($this->getDb ()->exec ( $sql ) === false) {
+		if ($db->exec ( $sql ) === false) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '添加' . $t_str . '名称时,执行SQL语句失败';
 			echo json_encode ( $ajaxReturn );
@@ -144,7 +152,10 @@ class AdminTags extends BaseAdmin {
 		$ajaxReturn = array (
 				'success' => true 
 		);
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -160,10 +171,10 @@ class AdminTags extends BaseAdmin {
 		}
 		if ($tagType == 1) {
 			$t_str = '标签';
-			$tableName = $this->getTablePre () . 'tag';
+			$tableName = $tablePre . 'tag';
 		} else {
 			$t_str = '分类';
-			$tableName = $this->getTablePre () . 'leibie';
+			$tableName = $tablePre . 'leibie';
 		}
 		$tagId = ( int ) $postData->get ( 't_id', 0 );
 		if (! $this->tagIdExists ( $tagId, $tagType )) {
@@ -179,7 +190,7 @@ class AdminTags extends BaseAdmin {
 			return;
 		}
 		$sql = 'DELETE FROM ' . $tableName . ' WHERE t_id=' . $tagId;
-		if ($this->getDb ()->exec ( $sql ) === false) {
+		if ($db->exec ( $sql ) === false) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '删除' . $t_str . '时,执行SQL语句失败';
 			echo json_encode ( $ajaxReturn );

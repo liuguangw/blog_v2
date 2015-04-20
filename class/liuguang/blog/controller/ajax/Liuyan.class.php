@@ -5,6 +5,7 @@ namespace liuguang\blog\controller\ajax;
 use liuguang\mvc\DataMap;
 use liuguang\blog\view\Liuyan as BlogLiuyan;
 use liuguang\mvc\Application;
+use liuguang\blog\model\User;
 
 /**
  * 处理用户发表的留言,以及留言的更新获取
@@ -30,7 +31,8 @@ class Liuyan extends BaseAdmin {
 		}
 		$postData = new DataMap ( $_POST );
 		$t_user = trim ( $postData->get ( 't_user', '' ) );
-		$isAdmin = $this->isAdmin ();
+		$user=new User();
+		$isAdmin = $user->checkAdmin($db, $tablePre);
 		if (($t_user == '') && (! $isAdmin)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '请设置您的昵称';

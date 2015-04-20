@@ -4,6 +4,8 @@ namespace liuguang\blog\controller\ajax;
 
 use liuguang\mvc\DataMap;
 use liuguang\blog\view\TopicPage;
+use liuguang\blog\model\User;
+use liuguang\blog\controller\BaseController;
 
 /**
  * 处理用户发表的回复,以及回复的更新获取
@@ -11,7 +13,7 @@ use liuguang\blog\view\TopicPage;
  * @author liuguang
  *        
  */
-class Topic extends BaseAdmin {
+class Topic extends BaseController {
 	public function doReplyAction() {
 		header ( 'Content-Type: application/json' );
 		$ajaxReturn = array (
@@ -29,7 +31,8 @@ class Topic extends BaseAdmin {
 		}
 		$postData = new DataMap ( $_POST );
 		$t_user = trim ( $postData->get ( 't_user', '' ) );
-		$isAdmin = $this->isAdmin ();
+		$user=new User();
+		$isAdmin = $user->checkAdmin($db, $tablePre);
 		if (($t_user == '') && (! $isAdmin)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '请设置您的昵称';

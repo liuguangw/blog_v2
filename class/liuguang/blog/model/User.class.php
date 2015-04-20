@@ -69,4 +69,26 @@ class User {
 		$salt=md5(md5('liuguang').$username);
 		return md5(md5($salt.$pass).$pass);
 	}
+	/**
+	 * 检测用户是否为博主
+	 * 
+	 * @param \PDO $db
+	 * @param string $tablePre
+	 * @param string $osid
+	 * @return boolean
+	 */
+	public function checkAdmin(\PDO $db,$tablePre,$osid=''){
+		if($osid==''){
+			if(!isset($_COOKIE['osid']))
+				return false;
+			else 
+				$osid=$_COOKIE['osid'];
+		}
+		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key=\'pass\'' );
+		$rst = $stm->fetch ();
+		if ($osid != $rst ['t_value'])
+			return false;
+		else
+			return true;
+	}
 }

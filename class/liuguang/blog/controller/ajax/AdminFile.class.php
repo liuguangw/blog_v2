@@ -5,6 +5,8 @@ namespace liuguang\blog\controller\ajax;
 use liuguang\mvc\DataMap;
 use liuguang\mvc\FsException;
 use liuguang\mvc\Application;
+use liuguang\blog\controller\BaseController;
+use liuguang\blog\model\User;
 
 /**
  * 处理uploadify上传的文件
@@ -12,7 +14,7 @@ use liuguang\mvc\Application;
  * @author liuguang
  *        
  */
-class AdminFile extends BaseAdmin {
+class AdminFile extends BaseController {
 	/**
 	 * 处理文件上传
 	 *
@@ -21,7 +23,10 @@ class AdminFile extends BaseAdmin {
 	public function ajaxUploadAction() {
 		header ( 'Content-Type: text/plain; charset=utf-8' );
 		$postData = new DataMap ( $_POST );
-		if (! $this->isAdmin ( $postData->get ( 'osid', '' ) )) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre,$postData->get ( 'osid', '' ))) {
 			$this->uploadResp ( 'danger', '只有博主才能进行此操作' );
 			return;
 		}
@@ -39,9 +44,9 @@ class AdminFile extends BaseAdmin {
 			$objectName .= $obj_type;
 		try {
 			$fs->upload ( $_FILES ['Filedata'], $objectName );
-			$sql = 'INSERT INTO ' . $this->getTablePre () . 'blog_upload(obj_name,obj_beizhu,add_time) VALUES(\'%s\',\'%s\',%d)';
+			$sql = 'INSERT INTO ' . $tablePre . 'blog_upload(obj_name,obj_beizhu,add_time) VALUES(\'%s\',\'%s\',%d)';
 			$sql = sprintf ( $sql, $objectName, $objectName, time () );
-			if ($this->getDb ()->exec ( $sql ) === false) {
+			if ($db->exec ( $sql ) === false) {
 				$this->uploadResp ( 'danger', '将文件信息存入数据库失败' );
 				return;
 			}
@@ -65,15 +70,16 @@ class AdminFile extends BaseAdmin {
 				'success' => true 
 		);
 		$postData = new DataMap ( $_POST );
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$f_id = ( int ) $postData->get ( 'f_id', 0 );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		// 文件记录验证
 		$stm = $db->query ( 'SELECT COUNT(*) as f_num FROM ' . $tablePre . 'blog_upload WHERE index_id=' . $f_id );
 		$rst = $stm->fetch ();
@@ -111,15 +117,16 @@ class AdminFile extends BaseAdmin {
 				'success' => true 
 		);
 		$postData = new DataMap ( $_POST );
-		if (! $this->isAdmin ()) {
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$f_id = ( int ) $postData->get ( 'f_id', 0 );
-		$db = $this->getDb ();
-		$tablePre = $this->getTablePre ();
 		// 文件记录验证
 		$stm = $db->query ( 'SELECT COUNT(*) as f_num FROM ' . $tablePre . 'blog_upload WHERE index_id=' . $f_id );
 		$rst = $stm->fetch ();
