@@ -64,6 +64,7 @@ class PushUrl extends BaseController {
 		switch ($url_key) {
 			case 'Index/index' :
 				$vModel = new BlogIndex ( $db, $tablePre );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
@@ -71,6 +72,7 @@ class PushUrl extends BaseController {
 				$vModel0 = new BlogList ( $db, $tablePre );
 				$vModel = new TopicList ( $vModel0 );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 1;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
@@ -79,6 +81,7 @@ class PushUrl extends BaseController {
 				$vModel0 = new TocType ( $db, $tablePre, $t_id );
 				$vModel = new TopicList ( $vModel0 );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 2;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
@@ -87,6 +90,7 @@ class PushUrl extends BaseController {
 				$vModel0 = new TagList ( $db, $tablePre, $t_id );
 				$vModel = new TopicList ( $vModel0 );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 2;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
@@ -97,65 +101,77 @@ class PushUrl extends BaseController {
 				$vModel0 = new TocArch ( $db, $tablePre, $t_id );
 				$vModel = new TopicList ( $vModel0 );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 3;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
 			case 'web/BlogTypes/index' :
 				$vModel = new TypesArchs ( $db, $tablePre, true );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 2;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
 			case 'web/BlogArchs/index' :
 				$vModel = new TypesArchs ( $db, $tablePre, false );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 3;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
 			case 'web/BlogAdmin/sets' :
 				$vModel = new AdminSets ( $db, $tablePre );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
 			case 'web/BlogAdmin/postTopic' :
 				$vModel = new PostTopic ( $db, $tablePre );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
 			case 'web/BlogAdmin/editTopic' :
 				$t_id = ( int ) $urlData->get ( 't_id', 1 );
 				$vModel = new EditTopic ( $db, $tablePre, $t_id );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
 			case 'web/BlogAdmin/types' :
 				$vModel = new AdminTags ( $db, $tablePre, false );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
 			case 'web/BlogAdmin/tags' :
 				$vModel = new AdminTags ( $db, $tablePre, true );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
 			case 'web/BlogAdmin/files' :
 				$vModel = new AdminFiles ( $db, $tablePre, $this->getFs () );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
 			case 'web/BlogAdmin/links' :
 				$vModel = new AdminLinks ( $db, $tablePre );
 				$page = ( int ) $urlData->get ( 'page', 1 );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ( $page );
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				break;
 			case 'web/BlogAdmin/env' :
 				$vModel = new AdminEnv ( $db, $tablePre, $this->getFs () );
+				$result ['nIndex'] = 0;
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
 				break;
 			case 'web/BlogAbout/index' :
+				$result ['nIndex'] = 5;
 				$vModel = new BlogAbout ( $db, $tablePre );
 				$result ['title'] = $vModel->getTitle ();
 				$result ['blog_center'] = $vModel->getHtml ();
@@ -163,16 +179,19 @@ class PushUrl extends BaseController {
 			case 'web/Topic/index' :
 				$t_id = ( int ) $urlData->get ( 't_id', 0 );
 				$vModel = new TopicPage ( $db, $tablePre, $t_id );
+				$result ['nIndex'] = 1;
 				$result ['blog_center'] = $vModel->getHtml ();
 				$result ['title'] = $vModel->getTitle ();
 				break;
 			case 'web/BlogLiuyan/index' :
 				$page = ( int ) $urlData->get ( 'page', 0 );
 				$vModel = new Liuyan ( $db, $tablePre );
+				$result ['nIndex'] = 4;
 				$result ['blog_center'] = $vModel->getHtml ( $page );
 				$result ['title'] = $vModel->getTitle ( $page );
 				break;
 			default :
+				$result ['nIndex'] = 0;
 				$result ['title'] = '未知页面';
 				$result ['blog_center'] = '当前页面还不支持pushState';
 		}

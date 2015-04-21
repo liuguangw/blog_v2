@@ -1,26 +1,47 @@
 /**
  * pushState加载url对应的页面主体内容
  * 
- * @param url
+ * @param state
+ * @param byClick
  */
-function loadUrl(url) {
+function loadUrl(state,byClick) {
+	if(!byClick)
+		state.moveLeft=!state.moveLeft;
 	$.ajax({
 		"url" : blogInfo.pushUrl,
 		"method" : "POST",
 		"cache" : false,
 		"dataType" : "json",
 		"data" : {
-			"url" : url
+			"url" : state.state_url
 		},
 		"success" : function(data) {
-			document.title = data.title;
-			$("#blog_center").animate({
-				"opacity" : 0
-			}, "fast", "swing", function() {
-				$(this).html(data.blog_center);
-				$("#blog_center").animate({
-					"opacity" : 100
-				}, "fast", "swing");
+			var centerNode=$("#blog_center"),nodeWidth,parentX;
+			nodeWidth=centerNode.outerWidth();
+			parentX=centerNode.parent().offset().left;
+			var animate0,left0;
+			if(state.moveLeft){
+				animate0={
+						"opacity" : 0,
+						"left": -nodeWidth-parentX
+					};
+				left0=nodeWidth/2;
+			}
+			else{
+				animate0={
+					"opacity" : 0,
+					"left": -nodeWidth+window.innerWidth+parentX
+				}
+				left0=-nodeWidth/2;
+			}
+			centerNode.animate(animate0,200,"swing",function(){
+				document.title = data.title;
+				updateNav("#main_navbar a:eq("+data.nIndex+")");
+				centerNode.html(data.blog_center).css("left",left0);
+				centerNode.animate({
+					"opacity" : 100,
+					"left":0
+				},200);
 			});
 		},
 		"error" : function(jqXHR, textStatus, errorThrown) {
@@ -37,10 +58,12 @@ $.fn.bindPushState = function() {
 	$(this).click(function(evt) {
 		if ("pushState" in history) {
 			evt.preventDefault();
-			history.pushState({
-				"state_url" : this.href
-			}, "", this.href);
-			loadUrl(this.href);
+			var state={
+				"state_url" : this.href,
+				"moveLeft" : true
+			};
+			history.pushState(state, "", this.href);
+			loadUrl(state,true);
 		}
 	});
 	return $(this);
@@ -173,9 +196,9 @@ function blogInit(nIndex) {
 	// 判断是否支持 pushState
 	if ("pushState" in history) {
 		// 浏览器前进、后退
-		window.addEventListener('popstate', function(e) {
+		window.addEventListener("popstate", function(e) {
 			if (history.state) {
-				loadUrl(e.state.state_url);
+				loadUrl(e.state,false);
 			}
 		}, false);
 	}

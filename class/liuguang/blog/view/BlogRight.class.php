@@ -28,9 +28,7 @@ class BlogRight {
 				'page' => 1 
 		) );
 		$aBlind='<script type="text/javascript">
-        $("#types_div a:not([class=\"pull-right\"])").bindPushState().click(function(){
-			updateNav("#main_navbar a:eq(2)");	
-		});
+        $("#types_div a:not([class=\"pull-right\"])").bindPushState();
         </script>';
 		$html = '<div id="types_div" class="panel panel-default">
   <div class="panel-heading">
@@ -67,9 +65,7 @@ class BlogRight {
 				'page' => 1 
 		) );
 		$aBlind='<script type="text/javascript">
-        $("#archives a:not([class=\"pull-right\"])").bindPushState().click(function(){
-			updateNav("#main_navbar a:eq(3)");	
-		});
+        $("#archives a:not([class=\"pull-right\"])").bindPushState();
         </script>';
 		$html = '<div id="archives" class="panel panel-default">
   <div class="panel-heading">
