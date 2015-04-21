@@ -42,6 +42,7 @@ class DoAdminSets extends BaseController {
 				'nav_color',
 				'nav_active_color',
 				'blog_keywords',
+				'search_abouts',
 				'abouts',
 				'blog_bottom'
 		);

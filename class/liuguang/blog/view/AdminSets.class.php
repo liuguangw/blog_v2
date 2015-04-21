@@ -68,7 +68,7 @@ class AdminSets {
                 ) 
         );
             $result = array ();
-            $stm = $this->db->query ( 'SELECT * FROM ' . $this->tablePre . 'config WHERE t_key IN(\'username\',\'nickname\',\'blogname\',\'blogname_color\',\'description\',\'blog_bottom\',\'abouts\',\'descr_color\',\'nav_color\',\'nav_active_color\',\'blog_keywords\',\'open_compress\',\'allow_liuyan\',\'allow_reply\',\'bg_img\',\'top_img\',\'touxiang_img\')' );
+            $stm = $this->db->query ( 'SELECT * FROM ' . $this->tablePre . 'config WHERE t_key IN(\'username\',\'nickname\',\'blogname\',\'blogname_color\',\'description\',\'blog_bottom\',\'abouts\',\'search_abouts\',\'descr_color\',\'nav_color\',\'nav_active_color\',\'blog_keywords\',\'open_compress\',\'allow_liuyan\',\'allow_reply\',\'bg_img\',\'top_img\',\'touxiang_img\')' );
             while ( $tmp = $stm->fetch () ) {
                 $result [$tmp ['t_key']] = $tmp ['t_value'];
             }
@@ -93,6 +93,12 @@ class AdminSets {
         foreach ( $inputs as $node ) {
             $html .= sprintf ( $tpl, $node [0], $node [2], $node [1], $node [0], $node [3] );
         }
+        $html.=('<div class="form-group">
+<label for="abouts_sets" class="col-sm-3 control-label">本站说明[用于搜索引擎]</label>
+<div class="col-sm-8">
+<textarea id="abouts_sets" class="form-control" rows="4">'.htmlspecialchars($result['search_abouts']).'</textarea>
+</div>
+</div>');
         $html.=('<div class="form-group">
 <label for="abouts_sets" class="col-sm-3 control-label">关于本站说明</label>
 <div class="col-sm-8">

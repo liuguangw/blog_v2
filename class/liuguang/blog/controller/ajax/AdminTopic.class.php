@@ -347,4 +347,46 @@ class AdminTopic extends BaseController {
 		}
 		echo json_encode ( $ajaxReturn );
 	}
+	/**
+	 * 处理博主删除文章的回复
+	 *
+	 * @return void json输出
+	 */
+	public function delReplyAction() {
+		header ( 'Content-Type: application/json' );
+		$ajaxReturn = array (
+				'success' => true 
+		);
+		$db = $this->getDb ();
+		$tablePre = $this->getTablePre ();
+		$user=new User();
+		if (! $user->checkAdmin($db,$tablePre)) {
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
+			echo json_encode ( $ajaxReturn );
+			return;
+		}
+		$postData = new DataMap ( $_POST );
+		$t_id = ( int ) $postData->get ( 'reply_id', 0 );
+		// 判断回复id是否存在
+		$sql = 'SELECT COUNT(*) AS t_num FROM ' . $tablePre . 'reply WHERE t_id=' . $t_id;
+		$stm = $db->query ( $sql );
+		$rst = $stm->fetch ();
+		$stm = null;
+		if ($rst ['t_num'] == 0) {
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ['msg'] = '此回复不存在';
+			echo json_encode ( $ajaxReturn );
+			return;
+		}
+		// 删除回复
+		$sql = 'DELETE FROM ' . $tablePre . 'reply WHERE t_id=' . $t_id;
+		if ($db->exec ( $sql ) === false) {
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ['msg'] = '删除回复记录失败';
+			echo json_encode ( $ajaxReturn );
+			return;
+		}
+		echo json_encode ( $ajaxReturn );
+	}
 }

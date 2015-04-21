@@ -284,7 +284,7 @@ class Install extends BaseController {
 		$sql = 'INSERT INTO %sconfig(t_key,t_value) VALUES (\'username\',\'%s\'),(\'pass\',\'%s\'),(\'blogname\',\'%s\'),(\'nickname\',\'%s\'),(\'install_time\',\'%d\')';
 		if ($db->exec ( sprintf ( $sql, $tablePre, $_POST ['username'], $userModel->encodePass ( $_POST ['username'], $_POST ['pass1'] ), addslashes ( $_POST ['blogname'] ), addslashes ( $_POST ['nickname'] ), time () ) ) === false)
 			return false;
-		$sql = 'INSERT INTO %sconfig(t_key,t_value) VALUES (\'description\',\'本博客程序由流光开发制作\'),(\'blog_bottom\',\'Powered by liuguang\'),(\'descr_color\',\'#666666\'),(\'bg_img\',\'\'),(\'top_img\',\'\'),(\'touxiang_img\',\'\'),(\'allow_reply\',\'1\'),(\'allow_liuyan\',\'1\'),(\'open_compress\',\'1\'),(\'blogname_color\',\'#0B0BEE\'),(\'nav_color\',\'#90DDD7\'),(\'nav_active_color\',\'#333\'),(\'blog_keywords\',\'流光博客,php\'),(\'abouts\',\'流光博客。。。。。。。。。。。。。。。。\')';
+		$sql = 'INSERT INTO %sconfig(t_key,t_value) VALUES (\'description\',\'本博客程序由流光开发制作\'),(\'blog_bottom\',\'Powered by liuguang\'),(\'descr_color\',\'#666666\'),(\'bg_img\',\'\'),(\'top_img\',\'\'),(\'touxiang_img\',\'\'),(\'allow_reply\',\'1\'),(\'allow_liuyan\',\'1\'),(\'open_compress\',\'1\'),(\'blogname_color\',\'#0B0BEE\'),(\'nav_color\',\'#90DDD7\'),(\'nav_active_color\',\'#333\'),(\'blog_keywords\',\'流光博客,php\'),(\'abouts\',\'流光博客。。。。。。。。。。。。。。。。\',(\'search_abouts\',\'本站程序是由流光开发的php开源博客,开源免费,而且十分方便移植\')';
 		if ($db->exec ( sprintf ( $sql, $tablePre ) ) === false)
 			return false;
 			// 导入默认分类

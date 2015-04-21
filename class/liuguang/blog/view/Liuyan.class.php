@@ -4,6 +4,7 @@ namespace liuguang\blog\view;
 
 use liuguang\mvc\Application;
 use liuguang\mvc\UrlHandler;
+use liuguang\blog\model\User;
 
 /**
  * 留言页面
@@ -199,7 +200,8 @@ class Liuyan {
 		$nickname = $rst ['t_value'];
 		$html = '<ul class="list-group" id="reply_list">';
 		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'liuyan ORDER BY t_id DESC LIMIT ' . $limit0 . ', ' . $limit );
-		
+		$user=new User();
+		$isAdmin=$user->checkAdmin($db, $tablePre);
 		$offset_num = $t_num % $limit;
 		$i = ($page_num + 1 - $page) * $limit;
 		if ($offset_num != 0)
@@ -210,8 +212,11 @@ class Liuyan {
 				$reply_nick = $nickname;
 			$html .= ('<li class="list-group-item">
                     <h4 class="list-group-item-heading">[' . $i . '楼]
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . htmlspecialchars ( $reply_nick ) . '&nbsp;&nbsp;&nbsp;[' . date ( 'Y-m-d H:i:s', $tmp ['post_time'] ) . ']</h4>');
-			$html .= ('<p class="list-group-item-heading">' . $tmp ['t_content'] . '</p></li>');
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . htmlspecialchars ( $reply_nick ) . '&nbsp;&nbsp;&nbsp;[' . date ( 'Y-m-d H:i:s', $tmp ['post_time'] ) . ']');
+			if($isAdmin){
+				$html.=('  <a href="javascript:void(0)" data-t_id="'.$tmp['t_id'].'">[删除留言]</a>');
+			}
+			$html .= ('</h4><p class="list-group-item-heading">' . $tmp ['t_content'] . '</p></li>');
 			$i --;
 		}
 		//分页
@@ -226,8 +231,53 @@ class Liuyan {
                     });
                 else
                     $(this).bindPushState();
-            });
-        </script>';
+            });';
+		$del_liuyan_url=$urlHandler->createUrl ( 'ajax/AdminLiuyan', 'delete', array (), false );
+		$loadLiuyanUrl = $urlHandler->createUrl ( 'ajax/Liuyan', 'loadReply', array (), false );
+		$html.=('<!-- 删除留言 -->
+				$("#reply_list>li").each(function(){
+				$(this).find("h4:first>a").click(function(){
+					var r=confirm("是否删除这条留言?"),aNode=$(this);
+			        if(!r)
+			            return;
+			        $.ajax({
+			            "url" : "' . $del_liuyan_url . '",
+			            "method" : "POST",
+			            "cache" : false,
+			            "dataType" : "json",
+			            "data" : {
+			                "reply_id":aNode.attr("data-t_id")
+			            },
+			            "success" : function(data) {
+			                if(data.success){
+			                /*刷新底部评论列表*/
+			                $.ajax({
+			                            "url" : "' . $loadLiuyanUrl . '",
+			                            "method" : "POST",
+			                            "cache" : false,
+			                            "dataType" : "json",
+			                            "data" : {
+			                                "page":' . $page . '
+			                            },
+			                            "success" : function(data) {
+			                                alertModal("success","执行成功","你已成功删除本条留言");
+                            			$("#reply_div").html("<div class=\"panel-heading\">留言列表</div>"+data.msg);
+			                            },
+			                            "error" : function(jqXHR, textStatus, errorThrown) {
+			                                alertModal("danger","异步失败",errorThrown);/*异步失败*/
+			                            }
+			                        });/*end ajax*/
+			                }
+			                else
+			                    alertModal("danger","删除留言失败",data.msg);
+			            },
+			            "error" : function(jqXHR, textStatus, errorThrown) {
+			                alertModal("danger","异步失败",errorThrown);/*异步失败*/
+			            }
+			        });/*end ajax*/
+					});/*end click*/
+				});
+		</script>');
 		return $html;
 	}
 }

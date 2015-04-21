@@ -19,7 +19,7 @@ class Index extends BaseController {
 		$result = array ();
 		$db = $this->getDb ();
 		$tablePre = $this->getTablePre ();
-		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key IN(\'blogname\',\'pass\',\'touxiang_img\',\'description\',\'blog_keywords\',\'blog_bottom\',\'open_compress\')' );
+		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key IN(\'blogname\',\'pass\',\'touxiang_img\',\'description\',\'blog_keywords\',\'search_abouts\',\'blog_bottom\',\'open_compress\')' );
 		while ( $tmp = $stm->fetch () ) {
 			$result [$tmp ['t_key']] = $tmp ['t_value'];
 		}
@@ -69,6 +69,7 @@ class Index extends BaseController {
 		$tplData->set ( 'blogInfo', json_encode ( $blogInfo ) );
 		$tplData->set ( 'nIndex', 0 );
 		$tplData->set ( 'blog_keywords', $result ['blog_keywords'] );
+		$tplData->set('search_abouts', $result['search_abouts']);
 		$tplData->set ( 'description', $result ['description'] );
 		$tplData->set ( 'title', $result ['blogname'] );
 		$tplData->set ( 'blogname', $result ['blogname'] );

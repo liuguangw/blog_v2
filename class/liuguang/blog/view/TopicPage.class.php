@@ -3,6 +3,7 @@
 namespace liuguang\blog\view;
 
 use liuguang\mvc\Application;
+use liuguang\blog\model\User;
 
 /**
  * 文章页面
@@ -292,7 +293,9 @@ else
 		$rst = $stm->fetch ();
 		$nickname = $rst ['t_value'];
 		$html = '<ul class="list-group" id="reply_list">';
-		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'reply WHERE topic_id=' . $t_id );
+		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'reply WHERE topic_id=' . $t_id .' ORDER BY t_id ASC');
+		$user=new User();
+		$isAdmin=$user->checkAdmin($db, $tablePre);
 		$i = 0;
 		while ( $tmp = $stm->fetch () ) {
 			$reply_nick = $tmp ['t_user'];
@@ -300,10 +303,61 @@ else
 				$reply_nick = $nickname;
 			$html .= ('<li class="list-group-item">
                     <h4 class="list-group-item-heading">[' . (++ $i) . '楼]
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . htmlspecialchars ( $reply_nick ) . '&nbsp;&nbsp;&nbsp;[' . date ( 'Y-m-d H:i:s', $tmp ['post_time'] ) . ']</h4>');
-			$html .= ('<p class="list-group-item-heading">' . $tmp ['t_content'] . '</p></li>');
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . htmlspecialchars ( $reply_nick ) . '&nbsp;&nbsp;&nbsp;[' . date ( 'Y-m-d H:i:s', $tmp ['post_time'] ) . ']');
+			if($isAdmin){
+				$html.=('  <a href="javascript:void(0)" data-t_id="'.$tmp['t_id'].'">[删除回复]</a>');
+			}
+			$html .= ('</h4><p class="list-group-item-heading">' . $tmp ['t_content'] . '</p></li>');
 		}
 		$html .= '</ul>';
+		$app = Application::getApp ();
+		$urlHandler = $app->getUrlHandler ();
+		$del_reply_url=$urlHandler->createUrl ( 'ajax/AdminTopic', 'delReply', array (), false );
+		$loadReplyUrl = $urlHandler->createUrl ( 'ajax/Topic', 'loadReply', array (), false );
+		$html.=('<script type="text/javascript">
+				$("#reply_list>li").each(function(){
+				$(this).find("h4:first>a").click(function(){
+					var r=confirm("是否删除这条回复?"),aNode=$(this);
+			        if(!r)
+			            return;
+			        $.ajax({
+			            "url" : "' . $del_reply_url . '",
+			            "method" : "POST",
+			            "cache" : false,
+			            "dataType" : "json",
+			            "data" : {
+			                "reply_id":aNode.attr("data-t_id")
+			            },
+			            "success" : function(data) {
+			                if(data.success){
+			                /*刷新底部评论列表*/
+			                $.ajax({
+			                            "url" : "' . $loadReplyUrl . '",
+			                            "method" : "POST",
+			                            "cache" : false,
+			                            "dataType" : "json",
+			                            "data" : {
+			                                "topic_id":' . $t_id . '
+			                            },
+			                            "success" : function(data) {
+			                                alertModal("success","执行成功","你已成功删除本条回复");
+                            			$("#reply_div").html("<div class=\"panel-heading\">回复列表</div>"+data.msg);
+			                            },
+			                            "error" : function(jqXHR, textStatus, errorThrown) {
+			                                alertModal("danger","异步失败",errorThrown);/*异步失败*/
+			                            }
+			                        });/*end ajax*/
+			                }
+			                else
+			                    alertModal("danger","删除回复失败",data.msg);
+			            },
+			            "error" : function(jqXHR, textStatus, errorThrown) {
+			                alertModal("danger","异步失败",errorThrown);/*异步失败*/
+			            }
+			        });/*end ajax*/
+					});/*end click*/
+				});
+		</script>');
 		return $html;
 	}
 }

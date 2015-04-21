@@ -8,7 +8,7 @@ if (! defined ( 'APP_PATH' ))
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="keywords" content="<?php echo $tplData->get('blog_keywords'); ?>">
-<meta name="description" content="<?php echo $tplData->get('description'); ?>">
+<meta name="description" content="<?php echo $tplData->get('search_abouts'); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?php echo $tplData->get('title'); ?></title>
 <!-- Bootstrap -->
