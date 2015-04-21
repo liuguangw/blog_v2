@@ -96,7 +96,7 @@ class AdminSets {
         $html.=('<div class="form-group">
 <label for="abouts_sets" class="col-sm-3 control-label">本站说明[用于搜索引擎]</label>
 <div class="col-sm-8">
-<textarea id="abouts_sets" class="form-control" rows="4">'.htmlspecialchars($result['search_abouts']).'</textarea>
+<textarea id="search_abouts_sets" class="form-control" rows="4">'.htmlspecialchars($result['search_abouts']).'</textarea>
 </div>
 </div>');
         $html.=('<div class="form-group">
@@ -264,6 +264,7 @@ class AdminSets {
                     "nav_color": $("#nav_color_sets").val(),
                     "nav_active_color": $("#nav_active_color_sets").val(),
 					"blog_keywords":$("#blog_keywords_sets").val(),
+                	"search_abouts":$("#search_abouts_sets").val(),
                     "abouts":$("#abouts_sets").val(),
                 	"blog_bottom":$("#blog_bottom_sets").val()
                 },
