@@ -25,6 +25,11 @@ class Liuyan {
 		$app = Application::getApp ();
 		$appConfig = $app->getAppConfig ();
 		$urlHandler = $app->getUrlHandler ();
+		date_default_timezone_set ( $appConfig->get ( 'timeZone' ) );
+		$html = '<div class="panel panel-default" id="reply_div">
+          <div class="panel-heading">留言列表第' . $page . '页</div>';
+		$html .= $this->getList ( $urlHandler, $page );
+		$html .= '</div>';
 		// 判断博客是否允许留言
 		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'config WHERE t_key=\'allow_liuyan\'' );
 		$rst = $stm->fetch ();
@@ -34,32 +39,6 @@ class Liuyan {
 			$html .= '<div class="panel panel-default">
   <div class="panel-body">博主已关闭留言功能</div>
 </div>';
-		date_default_timezone_set ( $appConfig->get ( 'timeZone' ) );
-		$html .= '<div class="panel panel-default" id="reply_div">
-          <div class="panel-heading">留言列表第' . $page . '页</div>';
-		$html .= $this->getList ( $urlHandler, $page  );
-		$html .= '</div>';
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
-		$ue_path = $blogContext . '/static/ueditor/';
-		$html .= ('<script type="text/javascript">
-			if(!blogInfo.load_js.shCore){
-			/*高亮插件*/
-				loadJsFile("' . $ue_path . 'third-party/SyntaxHighlighter/shCore.js",function(){
-					var oHead = document.getElementsByTagName("head")[0];
-					var cssObject = document.createElement("link");
-					cssObject.rel="stylesheet";
-					cssObject.type="text/css";
-					cssObject.href="' . $ue_path . 'third-party/SyntaxHighlighter/shCoreDefault.css";
-					cssObject.onload=function(){
-						SyntaxHighlighter.highlight();
-					};
-					oHead.appendChild(cssObject);
-					blogInfo.load_js.shCore=true;
-				});
-			}
-			else
-				SyntaxHighlighter.highlight();
-			</script>');
 		return $html;
 	}
 	public function getTitle($page) {
@@ -181,8 +160,8 @@ class Liuyan {
 		return $html;
 	}
 	public function getList(UrlHandler $urlHandler, $page) {
-		$db=$this->db;
-		$tablePre=$this->tablePre;
+		$db = $this->db;
+		$tablePre = $this->tablePre;
 		$stm = $db->query ( 'SELECT COUNT(*) as t_num FROM ' . $tablePre . 'liuyan' );
 		$rst = $stm->fetch ();
 		if ($rst ['t_num'] == 0) {
@@ -200,8 +179,8 @@ class Liuyan {
 		$nickname = $rst ['t_value'];
 		$html = '<ul class="list-group" id="reply_list">';
 		$stm = $db->query ( 'SELECT * FROM ' . $tablePre . 'liuyan ORDER BY t_id DESC LIMIT ' . $limit0 . ', ' . $limit );
-		$user=new User();
-		$isAdmin=$user->checkAdmin($db, $tablePre);
+		$user = new User ();
+		$isAdmin = $user->checkAdmin ( $db, $tablePre );
 		$offset_num = $t_num % $limit;
 		$i = ($page_num + 1 - $page) * $limit;
 		if ($offset_num != 0)
@@ -213,16 +192,18 @@ class Liuyan {
 			$html .= ('<li class="list-group-item">
                     <h4 class="list-group-item-heading">[' . $i . '楼]
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span> ' . htmlspecialchars ( $reply_nick ) . '&nbsp;&nbsp;&nbsp;[' . date ( 'Y-m-d H:i:s', $tmp ['post_time'] ) . ']');
-			if($isAdmin){
-				$html.=('  <a href="javascript:void(0)" data-t_id="'.$tmp['t_id'].'">[删除留言]</a>');
+			if ($isAdmin) {
+				$html .= ('  <a href="javascript:void(0)" data-t_id="' . $tmp ['t_id'] . '">[删除留言]</a>');
 			}
 			$html .= ('</h4><p class="list-group-item-heading">' . $tmp ['t_content'] . '</p></li>');
 			$i --;
 		}
-		//分页
-		$fenyeV=new Fenye();
-		$urlTpl=$urlHandler->createUrl('web/BlogLiuyan', 'index', array('page'=>'%d'));
-		$html.=$fenyeV->getNav($urlTpl, $page, $page_num);
+		// 分页
+		$fenyeV = new Fenye ();
+		$urlTpl = $urlHandler->createUrl ( 'web/BlogLiuyan', 'index', array (
+				'page' => '%d' 
+		) );
+		$html .= $fenyeV->getNav ( $urlTpl, $page, $page_num );
 		$html .= '<script type="text/javascript">
             $("#f_fenye a").each(function(){
                 if($(this).parent().is("li[class]"))
@@ -232,9 +213,29 @@ class Liuyan {
                 else
                     $(this).bindPushState();
             });';
-		$del_liuyan_url=$urlHandler->createUrl ( 'ajax/AdminLiuyan', 'delete', array (), false );
+		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
+		$ue_path = $blogContext . '/static/ueditor/';
+		$html .= ('/*高亮插件*/
+			if(!blogInfo.load_js.shCore){
+				loadJsFile("' . $ue_path . 'third-party/SyntaxHighlighter/shCore.js",function(){
+					var oHead = document.getElementsByTagName("head")[0];
+					var cssObject = document.createElement("link");
+					cssObject.rel="stylesheet";
+					cssObject.type="text/css";
+					cssObject.href="' . $ue_path . 'third-party/SyntaxHighlighter/shCoreDefault.css";
+					cssObject.onload=function(){
+						SyntaxHighlighter.highlight();
+					};
+					oHead.appendChild(cssObject);
+					blogInfo.load_js.shCore=true;
+				});
+			}
+			else
+				SyntaxHighlighter.highlight();');
+		$del_liuyan_url = $urlHandler->createUrl ( 'ajax/AdminLiuyan', 'delete', array (), false );
 		$loadLiuyanUrl = $urlHandler->createUrl ( 'ajax/Liuyan', 'loadReply', array (), false );
-		$html.=('<!-- 删除留言 -->
+		if ($isAdmin)
+			$html .= ('/*删除留言 */
 				$("#reply_list>li").each(function(){
 				$(this).find("h4:first>a").click(function(){
 					var r=confirm("是否删除这条留言?"),aNode=$(this);
@@ -278,6 +279,8 @@ class Liuyan {
 					});/*end click*/
 				});
 		</script>');
+		else
+			$html .= '</script>';
 		return $html;
 	}
 }
