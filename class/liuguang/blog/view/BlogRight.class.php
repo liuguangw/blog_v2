@@ -19,7 +19,11 @@ class BlogRight {
 		$this->tablePre = $tablePre;
 	}
 	public function getHtml() {
-		return $this->getFenleiList ( 0, $this->limit ).$this->getArchList(0, $this->limit);
+		$aBlind='<script type="text/javascript">
+        $("#types_div a").bindPushState();
+        $("#archives a").bindPushState();
+        </script>';
+		return $this->getFenleiList ( 0, $this->limit ).$this->getArchList(0, $this->limit).$aBlind;
 	}
 	public function getFenleiList($start, $limit) {
 		$app = Application::getApp ();
@@ -27,9 +31,6 @@ class BlogRight {
 		$blogTypesUrl = $urlHandler->createUrl ( 'web/BlogTypes', 'index', array (
 				'page' => 1 
 		) );
-		$aBlind='<script type="text/javascript">
-        $("#types_div a:not([class=\"pull-right\"])").bindPushState();
-        </script>';
 		$html = '<div id="types_div" class="panel panel-default">
   <div class="panel-heading">
 	<a href="' . $blogTypesUrl . '">文章分类</a>
@@ -41,7 +42,7 @@ class BlogRight {
 		if ($rst ['s_num'] == 0) {
 			$html .= '<div class="panel-body">博主还没有创建一个分类</div>
 </div>';
-			return $html.$aBlind;
+			return $html;
 		}
 		$html .= '<div class="list-group">';
 		$sql = 'SELECT ' . $this->tablePre . 'leibie.t_id,' . $this->tablePre . 'leibie.t_name,COUNT(' . $this->tablePre . 'topic.leibie_id) as f_num FROM ' . $this->tablePre . 'leibie LEFT JOIN ' . $this->tablePre . 'topic ON ' . $this->tablePre . 'leibie.t_id=' . $this->tablePre . 'topic.leibie_id GROUP BY ' . $this->tablePre . 'leibie.t_id ORDER BY ' . $this->tablePre . 'leibie.t_id ASC';
@@ -56,7 +57,7 @@ class BlogRight {
 			) ), $typeInfo ['f_num'], $typeInfo ['t_name'] );
 		}
 		$html .= '</div></div>';
-		return $html.$aBlind;
+		return $html;
 	}
 	public function getArchList($start, $limit) {
 		$app = Application::getApp ();
@@ -64,9 +65,6 @@ class BlogRight {
 		$blogArchUrl = $urlHandler->createUrl ( 'web/BlogArchs', 'index', array (
 				'page' => 1 
 		) );
-		$aBlind='<script type="text/javascript">
-        $("#archives a:not([class=\"pull-right\"])").bindPushState();
-        </script>';
 		$html = '<div id="archives" class="panel panel-default">
   <div class="panel-heading">
 	<a href="' . $blogArchUrl . '">文章归档</a>
@@ -78,7 +76,7 @@ class BlogRight {
 		if ($rst ['s_num'] == 0) {
 			$html .= '<div class="panel-body">博主还没有发表一篇文章</div>
 </div>';
-			return $html.$aBlind;
+			return $html;
 		}
 		$html .= '<div class="list-group">';
 		$listTpl = '<a href="%s" class="list-group-item">
@@ -91,6 +89,6 @@ class BlogRight {
 			) ), $tmp ['a_num'], substr ( $tmp ['post_ym'], 0, 4 ) . '-' . substr ( $tmp ['post_ym'], 4 ) );
 		}
 		$html .= '</div></div>';
-		return $html.$aBlind;
+		return $html;
 	}
 }

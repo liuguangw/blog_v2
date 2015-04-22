@@ -56,14 +56,15 @@ function loadUrl(state,byClick) {
  */
 $.fn.bindPushState = function() {
 	$(this).click(function(evt) {
-		if ("pushState" in history) {
+		var linkNode = $(this)[0];
+		if (("pushState" in history) && (linkNode.host == location.host)) {
 			evt.preventDefault();
-			var state={
-				"state_url" : this.href,
+			var state = {
+				"state_url" : linkNode.href,
 				"moveLeft" : true
 			};
-			history.pushState(state, "", this.href);
-			loadUrl(state,true);
+			history.pushState(state, "", state.state_url);
+			loadUrl(state, true);
 		}
 	});
 	return $(this);
@@ -260,7 +261,7 @@ function blogInit(nIndex) {
 	}
 	adminListHtml+="</ul>";
 	$("#user_area").after(adminListHtml);
-	$("#admin_list a:lt(7)").bindPushState();
+	$("#admin_list a").bindPushState();
 	/* 更新登录状态 */
 	updateUserArea(blogInfo.is_login);
 	/* 登录界面代码生成 */
