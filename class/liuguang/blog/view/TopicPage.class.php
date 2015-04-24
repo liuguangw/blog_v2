@@ -57,7 +57,7 @@ class TopicPage {
 		$nodeTpl = '<div id="topic_page" class="panel panel-default">
   <div class="panel-heading">%s</div>
   <div class="panel-body">
-    <p>发表于:%s&nbsp;%s 浏览数:%s&nbsp; 所属分类:&nbsp; <a href="%s">%s</a></p>
+    <p id="topic_head_info">发表于:%s&nbsp;%s 浏览数:%s&nbsp; 所属分类:&nbsp; <a href="%s">%s</a></p>
     <hr/>
     %s
 	<hr/>
@@ -116,7 +116,7 @@ else
 				't_id' => $t_id 
 		) );
 		$html .= ('<script type="text/javascript">
-            if(blogInfo.is_login==1)
+            if(blogInfo.is_login)
                 $("#topic_head_info").append("&nbsp; <a href=\"' . $edit_topic_url . '\"><span class=\"label label-primary\">管理文章</span></a>");
             $("#topic_page a").bindPushState();
         </script>');
