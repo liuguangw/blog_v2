@@ -18,8 +18,9 @@ class PostTopic {
 		$this->tablePre = $tablePre;
 	}
 	public function getHtml() {
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
-		$ue_path = $blogContext . '/static/ueditor/';
+		$app = Application::getApp ();
+		$appConfig = $app->getAppConfig ();
+		$ue_path = $appConfig->get ( 'app_pub_context' ) . '/ueditor/';
 		$html = '<div class="panel panel-default">
   <div class="panel-heading">发表文章</div>
   <div class="panel-body">
@@ -29,7 +30,6 @@ class PostTopic {
 <input type="text" class="form-control" id="t_title" placeholder="请输入文章标题">
 </div>
 </div>';
-		$app = Application::getApp ();
 		$urlHandler = $app->getUrlHandler ();
 		$configUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'config', array (), false );
 		$uploadimageUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadimage', array (), false );

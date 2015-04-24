@@ -50,8 +50,9 @@ class Liuyan {
 	 * 获取留言处的编辑器
 	 */
 	private function getEditor(UrlHandler $urlHandler, $page) {
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
-		$ue_path = $blogContext . '/static/ueditor/';
+		$app = Application::getApp ();
+		$appConfig = $app->getAppConfig ();
+		$ue_path = $appConfig->get ( 'app_pub_context' ) . '/ueditor/';
 		$configUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'config', array (), false );
 		$uploadimageUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadimage', array (), false );
 		$uploadscrawlUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadscrawl', array (), false );

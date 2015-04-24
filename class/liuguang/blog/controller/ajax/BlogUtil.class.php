@@ -24,7 +24,6 @@ class BlogUtil extends BaseController {
 	public function cssAction() {
 		$tpl = new Template ( 'blogcss', 'text/css' );
 		$tplData = $tpl->getTplData ();
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
 		$db = $this->getDb ();
 		$tablePre = $this->getTablePre ();
 		$data = array ();
@@ -33,9 +32,9 @@ class BlogUtil extends BaseController {
 			$data [$tmp ['t_key']] = $tmp ['t_value'];
 		}
 		if ($data ['bg_img'] == '')
-			$data ['bg_img'] = $blogContext . '/static/img/blog_bg.jpg';
+			$data ['bg_img'] = $tplData->get ( 'public_context' ) . '/img/blog_bg.jpg';
 		if ($data ['top_img'] == '')
-			$data ['top_img'] = $blogContext . '/static/img/blog_top.jpg';
+			$data ['top_img'] = $tplData->get ( 'public_context' ). '/img/blog_top.jpg';
 		foreach ( $data as $key => $value ) {
 			$tplData->set ( $key, $value );
 		}

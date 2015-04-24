@@ -1,7 +1,6 @@
 <?php
 $config = array ();
-$config ['errHandler'] = 'liuguang\\mvc\\MvcErrHandler';
-$config ['urlHandler'] = 'liuguang\\mvc\\MvcUrlHandler';//liuguang\blog\model\StaticUrlHandler
+//$config ['urlHandler'] = 'liuguang\\mvc\\StaticUrlHandler';
 $config ['dblist'] = array (
 		0 => array (
 				'dsn' => 'mysql:host=localhost;port=3306;dbname=test',
@@ -18,15 +17,9 @@ $config ['fslist'] = array (
 				'config' => array (
 						'bucketName' => 'blog' 
 				) 
-		) 
+		)
 );
-$config ['extClass'] = array ();
 $config ['controllerNs'] = 'liuguang\\blog\\controller';
-$config ['cKey'] = 'c';
-$config ['aKey'] = 'a';
-$config ['defaultC'] = 'Index';
-$config ['defaultA'] = 'index';
-$config ['404C'] = 'Err404';
 // ------
 $config ['blogInit'] = false;
 $config ['blogDbId'] = 0;

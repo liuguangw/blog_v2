@@ -15,13 +15,16 @@ class Install extends BaseController{
 		//检查数据库连接
 		$db=$this->getDb();
 		$tpl=new Template('install');
+		$tplData=$tpl->getTplData();
 		$app=Application::getApp();
 		$appConfig=$app->getAppConfig();
-		$checkInputUrl=$app->getUrlHandler()->createUrl('ajax/Install', 'index',array(),false);
-		$doInstallUrl=$app->getUrlHandler()->createUrl('ajax/Install', 'do',array(),false);
-		$tpl->getTplData()->set('checkInputUrl',$checkInputUrl);
-		$tpl->getTplData()->set('doInstallUrl', $doInstallUrl);
-		$tpl->getTplData()->set('blogInit', $appConfig->get('blogInit',false)?'true':'false');
+		$urlHandler=$app->getUrlHandler();
+		$checkInputUrl=$urlHandler->createUrl('ajax/Install', 'index',array(),false);
+		$doInstallUrl=$urlHandler->createUrl('ajax/Install', 'do',array(),false);
+		$tplData->set('checkInputUrl',$checkInputUrl);
+		$tplData->set('doInstallUrl', $doInstallUrl);
+		$tplData->set('blogInit', $appConfig->get('blogInit',false)?'true':'false');
+		$tplData->set ( 'blogIndexUrl', $urlHandler->createUrl ( 'Index', 'index', array () ,false) );
 		$tpl->setCompress(true);
 		$tpl->display();
 	}

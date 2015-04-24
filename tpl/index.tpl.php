@@ -12,21 +12,21 @@ if (! defined ( 'APP_PATH' ))
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?php echo $tplData->get('title'); ?></title>
 <!-- Bootstrap -->
-<link href="<?php echo $tplData->get('blog_context'); ?>/static/css/bootstrap.min.css"
+<link href="<?php echo $tplData->get('public_context'); ?>/css/bootstrap.min.css"
 	type="text/css" rel="stylesheet" />
 <script type="text/javascript"
-	src="<?php echo $tplData->get('blog_context'); ?>/static/js/jquery1.11.2.min.js"></script>
+	src="<?php echo $tplData->get('public_context'); ?>/js/jquery1.11.2.min.js"></script>
 <script type="text/javascript"
-	src="<?php echo $tplData->get('blog_context'); ?>/static/js/bootstrap.min.js"></script>
+	src="<?php echo $tplData->get('public_context'); ?>/js/bootstrap.min.js"></script>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn"t work if you view the page via file:// -->
 <!--[if lt IE 9]>
-      <script src="<?php echo $tplData->get('blog_context'); ?>/static/js/html5shiv3.7.2.min.js"></script>
-      <script src="<?php echo $tplData->get('blog_context'); ?>/static/js/respond1.4.2.min.js"></script>
+      <script src="<?php echo $tplData->get('public_context'); ?>/js/html5shiv3.7.2.min.js"></script>
+      <script src="<?php echo $tplData->get('public_context'); ?>/js/respond1.4.2.min.js"></script>
 <![endif]-->
 <link href="<?php echo $tplData->get('blogCsspath'); ?>" rel="stylesheet" type="text/css" />
 <script type="text/javascript"
-	src="<?php echo $tplData->get('blog_context'); ?>/static/js/blog.js"></script>
+	src="<?php echo $tplData->get('public_context'); ?>/js/blog.js"></script>
 <script type="text/javascript">
 var blogInfo=<?php echo $tplData->get('blogInfo'); ?>;// 存储博客的基本信息和登录状态
 $(document).ready(function(){

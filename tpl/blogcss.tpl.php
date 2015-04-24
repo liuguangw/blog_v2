@@ -110,7 +110,7 @@ body{
 	width:65px;
 	height:65px;
 	cursor: pointer;
-	background-image: url(<?php echo $tplData->get('blog_context'); ?>/static/img/to_top.png);
+	background-image: url(<?php echo $tplData->get('public_context'); ?>/img/to_top.png);
 	background-position:0 0;
 	display:none;
  }

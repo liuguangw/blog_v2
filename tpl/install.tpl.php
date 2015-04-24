@@ -10,27 +10,27 @@ if (! defined ( 'APP_PATH' ))
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>流光博客安装程序</title>
 <!-- Bootstrap -->
-<link href="<?php echo $tplData->get('blog_context'); ?>/static/css/bootstrap.min.css"
+<link href="<?php echo $tplData->get('public_context'); ?>/css/bootstrap.min.css"
 	rel="stylesheet" />
 <script type="text/javascript"
-	src="<?php echo $tplData->get('blog_context'); ?>/static/js/jquery1.11.2.min.js"></script>
+	src="<?php echo $tplData->get('public_context'); ?>/js/jquery1.11.2.min.js"></script>
 <script type="text/javascript"
-	src="<?php echo $tplData->get('blog_context'); ?>/static/js/bootstrap.min.js"></script>
+	src="<?php echo $tplData->get('public_context'); ?>/js/bootstrap.min.js"></script>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn"t work if you view the page via file:// -->
 <!--[if lt IE 9]>
-      <script src="<?php echo $tplData->get('blog_context'); ?>/static/js/html5shiv3.7.2.min.js"></script>
-      <script src="<?php echo $tplData->get('blog_context'); ?>/static/js/respond1.4.2.min.js"></script>
+      <script src="<?php echo $tplData->get('public_context'); ?>/js/html5shiv3.7.2.min.js"></script>
+      <script src="<?php echo $tplData->get('public_context'); ?>/js/respond1.4.2.min.js"></script>
 <![endif]-->
 <style type="text/css">
 body{
-	background-image: url(<?php echo $tplData->get('blog_context'); ?>/static/img/blog_bg.jpg);
+	background-image: url(<?php echo $tplData->get('public_context'); ?>/img/blog_bg.jpg);
 	background-repeat: repeat repeat;
 }
 #main_div {
 	min-height: 700px;
 	padding-top: 150px;
-	background-image: url(<?php echo $tplData->get('blog_context'); ?>/static/img/blog_top.jpg);
+	background-image: url(<?php echo $tplData->get('public_context'); ?>/img/blog_top.jpg);
 	background-repeat: no-repeat no-repeat;
 }
 #install_form{
@@ -62,7 +62,7 @@ $(document).ready(function(){
 	var blogInit=<?php echo $tplData->get('blogInit'); ?>;
 	if(blogInit){
 		$("#installed").on("hidden.bs.modal", function () {
-			location.href="<?php echo $tplData->get('blog_context'); ?>/";
+			location.href="<?php echo $tplData->get('blogIndexUrl'); ?>";
 		});
 		$("#installed").modal("show");
 	}

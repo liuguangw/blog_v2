@@ -38,7 +38,7 @@ class Index extends BaseController {
 			}
 		}
 		if ($result ['touxiang_img'] == '')
-			$result ['touxiang_img'] = $tplData->get ( 'blog_context' ) . '/static/img/touxiang.jpg';
+			$result ['touxiang_img'] = $tplData->get ( 'public_context' ) . '/img/touxiang.jpg';
 		$blogInfo = array (
 				'blogname' => $result ['blogname'],
 				'load_js' => array (

@@ -25,16 +25,16 @@ class Template {
 	 *        	mime类型,默认值为text/html; charset=utf-8
 	 */
 	public function __construct($tplName, $mimeType = 'text/html; charset=utf-8') {
-		$tplPath = APP_PATH . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR . $tplName . '.tpl.php';
+		$app = Application::getApp ();
+		$tplPath = APP_PATH . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR . $tplName . '.tpl.php';
 		if (! is_file ( $tplPath )) {
-			$app = Application::getApp ();
 			$app->getErrHandler ()->handle ( 404, 'tpl模板未找到' );
 		}
 		$this->tplPath = $tplPath;
 		$this->mimeType = $mimeType;
 		$this->openC = true;
 		$tplData = array (
-				'blog_context' => substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) ) 
+				'public_context' => $app->getAppConfig ()->get ( 'app_pub_context' ) 
 		);
 		$this->tplData = new DataMap ( $tplData );
 	}
@@ -77,7 +77,7 @@ class Template {
 	 * @return void
 	 */
 	public function display() {
-		if ((! $this->openC) || (!extension_loaded ( 'zlib' )))
+		if ((! $this->openC) || (! extension_loaded ( 'zlib' )))
 			$cType = 0;
 		else
 			$cType = $this->getCtype ();

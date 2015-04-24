@@ -135,8 +135,7 @@ else
   <div class="panel-body">博主已关闭回复功能</div>
 </div>';
 		}
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
-		$ue_path = $blogContext . '/static/ueditor/';
+		$ue_path = $appConfig->get ( 'app_pub_context' ) . '/ueditor/';
 		$html .= ('<script type="text/javascript">
 			if(!blogInfo.load_js.shCore){
 			/*高亮插件*/
@@ -167,8 +166,9 @@ else
 	 * 获取回复处的编辑器
 	 */
 	private function getReplyEditor($t_id) {
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
-		$ue_path = $blogContext . '/static/ueditor/';
+		$app = Application::getApp ();
+		$appConfig = $app->getAppConfig ();
+		$ue_path = $appConfig->get ( 'app_pub_context' ) . '/ueditor/';
 		$html = '<div class="panel panel-default">
   <div class="panel-body">
     <form class="form-horizontal" id="post_topic_form">';
@@ -177,7 +177,6 @@ else
 <input type="text" class="form-control" id="t_user" placeholder="请输入您的名字或者昵称">
 </div>
 </div>';
-		$app = Application::getApp ();
 		$urlHandler = $app->getUrlHandler ();
 		$configUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'config', array (), false );
 		$uploadimageUrl = $urlHandler->createUrl ( 'ajax/Ueditor', 'uploadimage', array (), false );
