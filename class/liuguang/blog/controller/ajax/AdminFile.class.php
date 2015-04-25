@@ -21,17 +21,23 @@ class AdminFile extends BaseController {
 	 * @return void
 	 */
 	public function ajaxUploadAction() {
-		header ( 'Content-Type: text/plain; charset=utf-8' );
-		$postData = new DataMap ( $_POST );
+		header ( 'Content-Type: application/json' );
+		$ajaxReturn = array (
+				'success' => true 
+		);
 		$db = $this->getDb ();
 		$tablePre = $this->getTablePre ();
-		$user=new User();
-		if (! $user->checkAdmin($db,$tablePre,$postData->get ( 'osid', '' ))) {
-			$this->uploadResp ( 'danger', '只有博主才能进行此操作' );
+		$user = new User ();
+		if (! $user->checkAdmin ( $db, $tablePre )) {
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ["msg"] = '只有博主才能进行此操作';
+			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		if (! isset ( $_FILES ['Filedata'] )) {
-			$this->uploadResp ( 'danger', "服务器未收到上传的文件" );
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ["msg"] = '服务器未收到上传的文件';
+			echo json_encode ( $ajaxReturn );
 			return;
 		}
 		$app = Application::getApp ();
@@ -47,17 +53,18 @@ class AdminFile extends BaseController {
 			$sql = 'INSERT INTO ' . $tablePre . 'blog_upload(obj_name,obj_beizhu,add_time) VALUES(\'%s\',\'%s\',%d)';
 			$sql = sprintf ( $sql, $objectName, $objectName, time () );
 			if ($db->exec ( $sql ) === false) {
-				$this->uploadResp ( 'danger', '将文件信息存入数据库失败' );
+				$ajaxReturn ['success'] = false;
+				$ajaxReturn ["msg"] = '将文件信息存入数据库失败';
+				echo json_encode ( $ajaxReturn );
 				return;
 			}
-			$this->uploadResp ( 'success', '上传文件' . htmlspecialchars ( $_FILES ['Filedata'] ['name'] ) . '成功,新文件名为' . $objectName );
+			$ajaxReturn ['newname'] = $objectName;
+			echo json_encode ( $ajaxReturn );
 		} catch ( FsException $e ) {
-			$this->uploadResp ( 'danger', $e->getMessage () );
-			return;
+			$ajaxReturn ['success'] = false;
+			$ajaxReturn ["msg"] = $e->getMessage ();
+			echo json_encode ( $ajaxReturn );
 		}
-	}
-	private function uploadResp($msgType, $msg) {
-		echo '<div class="alert alert-', $msgType, '" role="alert">', $msg, '</div>';
 	}
 	/**
 	 * 修改文件的备注
@@ -72,8 +79,8 @@ class AdminFile extends BaseController {
 		$postData = new DataMap ( $_POST );
 		$db = $this->getDb ();
 		$tablePre = $this->getTablePre ();
-		$user=new User();
-		if (! $user->checkAdmin($db,$tablePre)) {
+		$user = new User ();
+		if (! $user->checkAdmin ( $db, $tablePre )) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );
@@ -119,8 +126,8 @@ class AdminFile extends BaseController {
 		$postData = new DataMap ( $_POST );
 		$db = $this->getDb ();
 		$tablePre = $this->getTablePre ();
-		$user=new User();
-		if (! $user->checkAdmin($db,$tablePre)) {
+		$user = new User ();
+		if (! $user->checkAdmin ( $db, $tablePre )) {
 			$ajaxReturn ['success'] = false;
 			$ajaxReturn ['msg'] = '只有博主才能进行此操作';
 			echo json_encode ( $ajaxReturn );

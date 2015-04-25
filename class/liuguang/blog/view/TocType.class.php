@@ -43,7 +43,7 @@ class TocType implements TopicListInter {
 		$urlHandler = $app->getUrlHandler ();
 		return $urlHandler->createUrl ( 'web/TocType', 'index', array (
 				't_id'=>$this->t_id,
-				'page' => '%d' 
+				'page' => '--page--' 
 		) );
 	}
 	

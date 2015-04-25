@@ -40,7 +40,7 @@ class BlogList implements TopicListInter {
 		$app = Application::getApp ();
 		$urlHandler = $app->getUrlHandler ();
 		return $urlHandler->createUrl ( 'web/BlogList', 'index', array (
-				'page' => '%d' 
+				'page' => '--page--' 
 		) );
 	}
 	

@@ -64,8 +64,8 @@ class TypesArchs {
 		}
 		$html .= '</div></div>';
 		$fenyeV = new Fenye ();
-		$html .= $fenyeV->getNav ( $urlHandler->createUrl ( (($this->isType)?'web/TocType':'web/TocArch'), 'index', array (
-				't_id' => '%d' 
+		$html .= $fenyeV->getNav ( $urlHandler->createUrl ( (($this->isType)?'web/BlogTypes':'web/BlogArchs'), 'index', array (
+				'page' => '--page--' 
 		) ), $page, $page_num );
 		$html .= '<script type="text/javascript">
             $("#list_div a").bindPushState();

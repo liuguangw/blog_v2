@@ -190,7 +190,7 @@ class AdminLinks {
 		}
 		$html .= '</table>';
 		$fenyeV=new Fenye();
-		$urlTpl=$urlHandler->createUrl('web/BlogAdmin', 'links', array('page'=>'%d'));
+		$urlTpl=$urlHandler->createUrl('web/BlogAdmin', 'links', array('page'=>'--page--'));
 		$html.=$fenyeV->getNav($urlTpl, $page, $page_num);
 		return $html;
 	}

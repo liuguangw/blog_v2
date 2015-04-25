@@ -43,7 +43,7 @@ class TocArch implements TopicListInter {
 		$urlHandler = $app->getUrlHandler ();
 		return $urlHandler->createUrl ( 'web/TocArch', 'index', array (
 				't_id'=>$this->t_id,
-				'page' => '%d' 
+				'page' => '--page--' 
 		) );
 	}
 	

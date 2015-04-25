@@ -43,7 +43,6 @@ class Index extends BaseController {
 				'blogname' => $result ['blogname'],
 				'load_js' => array (
 						'ueditor' => false,
-						'uploadify' => false,
 						'shCore' => false,
 						'baiduShare' => false 
 				) 

@@ -202,7 +202,7 @@ class Liuyan {
 		// 分页
 		$fenyeV = new Fenye ();
 		$urlTpl = $urlHandler->createUrl ( 'web/BlogLiuyan', 'index', array (
-				'page' => '%d' 
+				'page' => '--page--' 
 		) );
 		$html .= $fenyeV->getNav ( $urlTpl, $page, $page_num );
 		$html .= '<script type="text/javascript">

@@ -26,18 +26,18 @@ class Fenye {
   		<ul class="pagination">';
 		if ($page == 1)
 			$html .= ('<li class="disabled">
-                    <a href="' . str_replace ( '%d', 1,$urlTpl ) . '" aria-label="Previous">
+                    <a href="' . str_replace ( '--page--', 1,$urlTpl ) . '" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     </a></li>');
 		else
 			$html .= ('<li>
-                    <a href="' . str_replace ( '%d', ($page - 1),$urlTpl  ) . '" aria-label="Previous">
+                    <a href="' . str_replace ( '--page--', ($page - 1),$urlTpl  ) . '" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     </a></li>');
 		for($i = $start_page; $i <= $end_page; $i ++) {
 			if (($i < 1) || ($i > $pageNum))
 				continue;
-			$url = str_replace ( '%d', $i,$urlTpl  );
+			$url = str_replace ( '--page--', $i,$urlTpl  );
 			if ($i == $page)
 				$html .= ('<li class="active">
                     <a href="' . $url . '">' . $i . '
@@ -51,12 +51,12 @@ class Fenye {
 		}
 		if ($page == $pageNum)
 			$html .= ('<li class="disabled">
-                    <a href="' . str_replace ( '%d', $page,$urlTpl  ) . '" aria-label="Next">
+                    <a href="' . str_replace ( '--page--', $page,$urlTpl  ) . '" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     </a></li>');
 		else
 			$html .= ('<li>
-                    <a href="' . str_replace ( '%d',($page + 1),$urlTpl  ) . '" aria-label="Next">
+                    <a href="' . str_replace ( '--page--',($page + 1),$urlTpl  ) . '" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     </a></li>');
 		$html.='</ul></nav>';
