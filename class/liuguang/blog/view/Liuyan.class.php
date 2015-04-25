@@ -214,8 +214,9 @@ class Liuyan {
                 else
                     $(this).bindPushState();
             });';
-		$blogContext = substr ( $_SERVER ['SCRIPT_NAME'], 0, - 1 - strlen ( MVC_ENTRY_NAME ) );
-		$ue_path = $blogContext . '/static/ueditor/';
+		$app = Application::getApp ();
+		$appConfig = $app->getAppConfig ();
+		$ue_path = $appConfig->get ( 'app_pub_context' ) . '/ueditor/';
 		$html .= ('/*高亮插件*/
 			if(!blogInfo.load_js.shCore){
 				loadJsFile("' . $ue_path . 'third-party/SyntaxHighlighter/shCore.js",function(){
